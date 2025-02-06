@@ -31,6 +31,7 @@ export function useAuth() {
       })
 
       if (signInError) throw signInError
+      // Session will be handled by the auth state change listener
     } catch (err) {
       console.error('Error signing in with Google:', err)
       error.value = 'Error signing in with Google'
@@ -60,12 +61,19 @@ export function useAuth() {
     user.value = session?.user ?? null
   })
 
+  // Add this new method to get the auth token
+  const getAuthToken = async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    return session?.access_token
+  }
+
   return {
     user,
     loading,
     error,
     initUser,
     signInWithGoogle,
-    signOut
+    signOut,
+    getAuthToken
   }
 }

@@ -2,10 +2,10 @@
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
-import { Button } from '@/components/ui/button'
+import NavigationBar from '@/components/layout/NavigationBar.vue'
 
 const router = useRouter()
-const { user, signOut } = useAuth()
+const { user } = useAuth()
 
 onMounted(() => {
   if (!user.value) {
@@ -13,22 +13,17 @@ onMounted(() => {
   }
 })
 
-const handleSignOut = async () => {
-  await signOut()
-  router.push('/auth')
-}
 </script>
 
 <template>
-  <main class="container py-8">
-    <div class="flex justify-between items-center mb-8">
-      <h1 class="text-2xl font-bold">Dashboard</h1>
-      <Button variant="outline" @click="handleSignOut">Sign Out</Button>
-    </div>
+  <div class="min-h-screen flex flex-col">
+    <NavigationBar />
     
-    <div v-if="user" class="bg-card p-6 rounded-lg shadow">
-      <h2 class="font-semibold mb-2">Welcome, {{ user.email }}</h2>
-      <p class="text-muted-foreground">You're successfully logged in!</p>
-    </div>
-  </main>
+    <main class="flex-1 p-8 max-w-7xl mx-auto w-full">
+      <div v-if="user" class="rounded-lg bg-card p-6 shadow">
+        <h2 class="mb-2 font-semibold">Welcome, {{ user.email }}</h2>
+        <p class="text-muted-foreground">You're successfully logged in!</p>
+      </div>
+    </main>
+  </div>
 </template> 
