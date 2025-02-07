@@ -7,16 +7,26 @@ const apiClient = axios.create({
   baseURL,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  withCredentials: true
 })
 
 // Request interceptor
 apiClient.interceptors.request.use(async (config) => {
   const { getAuthToken } = useAuth()
   const token = await getAuthToken()
-
+  
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+    // Ensure we're setting the Authorization header correctly
+    config.headers['Authorization'] = `Bearer ${token}`
+    
+    // Debug log the actual token in development
+    if (import.meta.env.DEV) {
+      console.log('Debug - Auth Token:', token)
+      console.log('Debug - Full Headers:', config.headers)
+    }
+  } else {
+    console.warn('No auth token available')
   }
 
   // Development logging
@@ -24,13 +34,16 @@ apiClient.interceptors.request.use(async (config) => {
     console.log('📤 API Request:', {
       method: config.method?.toUpperCase(),
       url: config.url,
-      headers: { ...config.headers, Authorization: token ? 'Bearer [REDACTED]' : undefined },
+      headers: config.headers,
       data: config.data,
       params: config.params,
     })
   }
 
   return config
+}, (error) => {
+  console.error('Request interceptor error:', error)
+  return Promise.reject(error)
 })
 
 // Response interceptor
