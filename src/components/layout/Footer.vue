@@ -1,0 +1,124 @@
+<template>
+  <footer class="relative">
+    <div class="mx-auto max-w-7xl px-6 py-12 lg:px-8">
+      <!-- Main Footer Content -->
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2">
+        <!-- Company Info -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-2">
+            <img src="@/assets/logo transaprent copy.png" alt="AppointAI Logo" class="h-8 w-8" />
+            <h3 class="text-2xl font-semibold text-foreground">JustBookMe</h3>
+          </div>
+          <p class="text-sm text-muted-foreground">
+            Streamlining appointments and customer engagement through intelligent automation.
+          </p>
+          <div class="flex space-x-4">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              class="hover:text-foreground text-muted-foreground"
+              as="a"
+              href="https://x.com/geriatricwriter"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <TwitterIcon class="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              class="hover:text-foreground text-muted-foreground"
+              as="a"
+              href="https://www.facebook.com/profile.php?id=61572205844944"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FacebookIcon class="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              class="hover:text-foreground text-muted-foreground"
+              as="a"
+              href="https://www.instagram.com/geriatric_writers/?hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <InstagramIcon class="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-semibold text-foreground">Quick Links</h3>
+          <nav class="flex flex-col space-y-2">
+            <router-link 
+              v-for="link in quickLinks" 
+              :key="link.to" 
+              :to="link.to"
+              class="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {{ link.text }}
+            </router-link>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="mt-8 pt-8 border-t border-border/50">
+        <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <p class="text-sm text-muted-foreground">
+            &copy; {{ new Date().getFullYear() }} JustBookMe. All rights reserved.
+          </p>
+          <nav class="flex space-x-4">
+            <router-link 
+              v-for="link in legalLinks" 
+              :key="link.to" 
+              :to="link.to"
+              class="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {{ link.text }}
+            </router-link>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </footer>
+</template>
+
+<script setup>
+import { Button } from '@/components/ui/button'
+import { TwitterIcon, FacebookIcon, InstagramIcon } from 'lucide-vue-next'
+
+const quickLinks = [
+  { to: '/about', text: 'About Us' },
+  { to: '/pricing', text: 'Pricing' },
+  { to: '/contact', text: 'Contact' }
+]
+
+const legalLinks = [
+  { to: '/privacy-policy', text: 'Privacy Policy' },
+  { to: '/terms-of-use', text: 'Terms of Use' },
+  { to: '/refund', text: 'Refund Policy' }
+]
+</script>
+
+<style scoped>
+/* Optional: Add hover effects for links */
+.router-link-active {
+  @apply text-foreground;
+}
+
+/* Optimize for mobile */
+@media (max-width: 767px) {
+  .grid {
+    @apply gap-6;
+  }
+  
+  .space-y-4 {
+    @apply space-y-3;
+  }
+}
+</style>
+  
