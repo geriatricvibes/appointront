@@ -1,46 +1,78 @@
 import apiClient from './config'
-import type { AxiosResponse } from 'axios'
 
-interface TimeSlot {
-  start_time: string
-  end_time: string
-  is_available: boolean
+interface CalendlyTokenResponse {
+  message: string
 }
 
-interface AppointmentCreate {
-  start_time: string
-  duration_minutes: number
-  summary: string
-  description: string
-  timezone?: string
+interface CalendlyConnectionStatus {
+  is_connected: boolean;
+  needs_refresh?: boolean;
+  message: string;
+}
+
+interface Source {
+  id: string;
+  title: string;
+  url?: string;
+  created_at: string;
+  content?: string;
+}
+
+interface AddSourceRequest {
+  url?: string;
+  content?: string;
+  title: string;
 }
 
 export const dashboardApi = {
   /**
-   * Get available appointment slots
+   * Exchange Calendly OAuth code for tokens
    */
-  getAvailableSlots: async (params: {
-    start_date: string
-    end_date: string
-    duration_minutes?: number
-    timezone?: string
-  }): Promise<TimeSlot[]> => {
-    const response: AxiosResponse<TimeSlot[]> = await apiClient.get('/api/v1/calendar/available-slots', {
-      params: {
-        start_date: params.start_date,
-        end_date: params.end_date,
-        duration_minutes: params.duration_minutes || 30,
-        timezone: params.timezone || 'UTC'
-      }
-    })
+  exchangeCalendlyCode: async (params: {
+    code: string;
+    redirect_uri: string;
+  }): Promise<CalendlyTokenResponse> => {
+    const response = await apiClient.post('/api/v1/calendly/oauth/callback', params)
     return response.data
   },
 
   /**
-   * Create a new appointment
+   * Get Calendly connection status
    */
-  createAppointment: async (appointment: AppointmentCreate): Promise<any> => {
-    const response = await apiClient.post('/api/v1/calendar/appointments', appointment)
+  getCalendlyStatus: async (): Promise<CalendlyConnectionStatus> => {
+    const response = await apiClient.get('/api/v1/calendly/connection-status')
+    return response.data
+  },
+
+  /**
+   * Add a new knowledge source
+   */
+  addSource: async (params: AddSourceRequest): Promise<{ message: string; id: string }> => {
+    const response = await apiClient.post('/api/v1/calendly/sources', params)
+    return response.data
+  },
+
+  /**
+   * Get all knowledge sources
+   */
+  getSources: async (): Promise<Source[]> => {
+    const response = await apiClient.get('/api/v1/calendly/sources')
+    return response.data
+  },
+
+  /**
+   * Get source details
+   */
+  getSourceDetails: async (sourceId: string): Promise<Source> => {
+    const response = await apiClient.get(`/api/v1/calendly/sources/${sourceId}`)
+    return response.data
+  },
+
+  /**
+   * Delete a source
+   */
+  deleteSource: async (sourceId: string): Promise<{ message: string }> => {
+    const response = await apiClient.delete(`/api/v1/calendly/sources/${sourceId}`)
     return response.data
   }
-} 
+}

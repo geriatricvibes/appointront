@@ -23,19 +23,25 @@ export function useAuth() {
     try {
       loading.value = true
       error.value = null
-      const { error: signInError } = await supabase.auth.signInWithOAuth({
+      const { data, error: signInError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent'
+          }
         }
       })
 
       if (signInError) throw signInError
-      // Session will be handled by the auth state change listener
+      if (!data.url) throw new Error('No OAuth URL returned')
+      
+      // Redirect to the OAuth URL
+      window.location.href = data.url
     } catch (err) {
       console.error('Error signing in with Google:', err)
       error.value = 'Error signing in with Google'
-    } finally {
       loading.value = false
     }
   }

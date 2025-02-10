@@ -93,5 +93,9 @@ module.exports = {
       },
     },
   },
-  plugins: [animate, setupInspiraUI],
+  plugins: [
+    require('@tailwindcss/typography'),
+    animate,
+    setupInspiraUI
+  ],
 }
