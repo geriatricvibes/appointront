@@ -25,6 +25,7 @@ src/
 
 // Additional instructions
 const additionalInstructions = `
+Use npm and npx for installing dependencies
 1. Use TypeScript for type safety
 2. Implement proper props and emits definitions
 3. Utilize Vue 3's Teleport component when needed

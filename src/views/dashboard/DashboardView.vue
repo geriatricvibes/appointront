@@ -4,8 +4,12 @@ import { useAuth } from '@/composables/useAuth'
 import { dashboardApi } from '@/api/dashboard'
 import NavigationBar from '@/components/layout/NavigationBar.vue'
 import ChatWidget from '@/components/widget/ChatWidget.vue'
-import { PlusIcon, TrashIcon } from '@heroicons/vue/24/outline/index.js'
+import { PlusIcon, TrashIcon, CalendarIcon } from '@heroicons/vue/24/outline/index.js'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Loader2, BookOpen, FileText, Type, Link2, FileEdit, CheckCircle2, XCircle } from 'lucide-vue-next'
+
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 
 const { user } = useAuth()
 const isLoading = ref(false)
@@ -19,11 +23,11 @@ const sourceError = ref<string | null>(null)
 
 // New source form
 const showAddSourceDialog = ref(false)
-const sourceType = ref<'website' | 'note'>('website')
+const sourceType = ref(true)
 const newSource = ref({
   title: '',
   url: '',
-  content: ''
+  content: '' 
 })
 
 const calendlyAuthUrl = computed(() => {
@@ -101,82 +105,94 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col bg-background">
     <NavigationBar />
     
-    <main class="flex-1 p-8 max-w-7xl mx-auto w-full">
+    <main class="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full">
       <div v-if="user" class="space-y-6">
-        <div class="rounded-lg bg-card p-6 shadow">
-          <h2 class="mb-2 font-semibold">Welcome, {{ user.email }}</h2>
-          <p class="text-muted-foreground">You're successfully logged in!</p>
-        </div>
-
-        <div class="rounded-lg bg-card p-6 shadow">
-          <h3 class="text-lg font-semibold mb-4">Connect Your Calendar</h3>
-          
-          <div v-if="isLoading" class="text-center py-4">
-            Processing...
-          </div>
-          
-          <div v-else-if="error" class="text-destructive p-4 rounded-md bg-destructive/10">
-            {{ error }}
-          </div>
-
-          <div v-else-if="calendlyStatus?.is_connected" class="text-success mb-4">
-            {{ calendlyStatus.message }}
-            <p v-if="calendlyStatus.needs_refresh" class="text-warning mt-2">
-              Your connection needs to be refreshed
+        <div class="space-y-4">
+          <!-- Calendly Card -->
+          <div class="rounded-lg bg-card p-4 shadow-sm border border-border/50">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <img src="@/assets/calendly.png" alt="Calendly" class="h-5 w-5" />
+                <h3 class="font-medium">Calendly Connection</h3>
+              </div>
+              
+              <div v-if="isLoading">
+                <Loader2 class="h-4 w-4 text-primary animate-spin" />
+              </div>
+              
+              <button
+                v-else-if="!calendlyStatus?.is_connected || calendlyStatus?.needs_refresh"
+                @click="connectCalendly"
+                class="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md bg-primary text-white hover:bg-primary/90 transition-colors"
+              >
+                {{ calendlyStatus?.is_connected ? 'Reconnect' : 'Connect' }}
+              </button>
+              
+              <div v-else class="flex items-center gap-2 px-3 py-1.5 bg-success/10 text-success rounded-md">
+                <CheckCircle2 class="h-4 w-4" />
+                <span class="text-sm font-medium">Connected</span>
+              </div>
+            </div>
+            
+            <p v-if="error" class="mt-2 text-sm text-destructive flex items-center gap-2">
+              <XCircle class="h-4 w-4" />
+              {{ error }}
+            </p>
+            <p v-else-if="calendlyStatus?.needs_refresh" class="mt-2 text-sm text-warning flex items-center gap-2">
+              <XCircle class="h-4 w-4" />
+              Connection needs refresh
             </p>
           </div>
-          
-          <button
-            v-if="!calendlyStatus?.is_connected || calendlyStatus?.needs_refresh"
-            @click="connectCalendly"
-            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-          >
-            {{ calendlyStatus?.is_connected ? 'Reconnect' : 'Connect' }} with Calendly
-          </button>
-        </div>
 
-        <div class="rounded-lg bg-card p-6 shadow mt-6">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-semibold">Knowledge Sources</h3>
-            <button
-              @click="showAddSourceDialog = true"
-              class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary/90"
-            >
-              <PlusIcon class="h-4 w-4 mr-1" />
-              Add Source
-            </button>
-          </div>
-
-          <div v-if="isLoadingSources" class="text-center py-4">
-            Loading sources...
-          </div>
-
-          <div v-else-if="sourceError" class="text-destructive p-4 rounded-md bg-destructive/10">
-            {{ sourceError }}
-          </div>
-
-          <div v-else-if="sources.length === 0" class="text-center py-4 text-muted-foreground">
-            No sources added yet
-          </div>
-
-          <div v-else class="space-y-3">
-            <div v-for="source in sources" :key="source.id" 
-                 class="flex justify-between items-center p-3 bg-muted/50 rounded-md">
-              <div>
-                <h4 class="font-medium">{{ source.title }}</h4>
-                <p v-if="source.url" class="text-sm text-muted-foreground">{{ source.url }}</p>
+          <!-- Knowledge Sources Card -->
+          <div class="rounded-lg bg-card p-4 shadow-sm border border-border/50">
+            <div class="flex justify-between items-center mb-4">
+              <div class="flex items-center gap-2">
+                <BookOpen class="h-5 w-5 text-primary" />
+                <h3 class="font-medium">Knowledge Sources</h3>
               </div>
-              <button @click="deleteSource(source.id)" 
-                      class="text-destructive hover:text-destructive/80">
-                <TrashIcon class="h-5 w-5" />
+              <button
+                @click="showAddSourceDialog = true"
+                class="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md bg-primary text-white hover:bg-primary/90 transition-colors"
+              >
+                <PlusIcon class="h-4 w-4 mr-1" />
+                Add Source
               </button>
+            </div>
+
+            <div v-if="isLoadingSources" class="flex items-center justify-center py-4">
+              <Loader2 class="h-4 w-4 text-primary animate-spin" />
+            </div>
+
+            <div v-else-if="sourceError" class="text-sm text-destructive p-3 rounded-md bg-destructive/10">
+              {{ sourceError }}
+            </div>
+
+            <div v-else-if="sources.length === 0" class="text-center py-6">
+              <FileText class="h-8 w-8 mx-auto mb-2 text-muted-foreground/50" />
+              <p class="text-sm text-muted-foreground">No sources added yet</p>
+            </div>
+
+            <div v-else class="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+              <div v-for="source in sources" :key="source.id" 
+                   class="flex justify-between items-center p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors group">
+                <div>
+                  <h4 class="font-medium">{{ source.title }}</h4>
+                  <p v-if="source.url" class="text-sm text-muted-foreground truncate max-w-[250px]">
+                    {{ source.url }}
+                  </p>
+                </div>
+                <button @click="deleteSource(source.id)" 
+                        class="opacity-0 group-hover:opacity-100 text-destructive hover:text-destructive/80 transition-opacity">
+                  <TrashIcon class="h-5 w-5" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
-
       </div>
     </main>
 
@@ -187,54 +203,63 @@ onMounted(() => {
         </DialogHeader>
         
         <form @submit.prevent="addSource" class="space-y-4">
-          <div class="flex space-x-4 mb-4">
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                v-model="sourceType"
-                value="website"
-                class="mr-2"
-              />
-              Website
-            </label>
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                v-model="sourceType"
-                value="note"
-                class="mr-2"
-              />
-              Note
-            </label>
+          <div class="space-y-2">
+            <div class="flex items-center space-x-4 px-2">
+              <div class="flex items-center space-x-2">
+                <Label>Note</Label>
+                <Switch
+                  v-model="sourceType"
+                  class="mx-2"
+                />
+                <Label>Website</Label>
+              </div>
+            </div>
+            <div class="bg-muted/30 rounded-md p-3">
+              <p class="text-sm text-muted-foreground">
+                {{ sourceType 
+                  ? 'Add a website URL to extract content from external sources' 
+                  : 'Create a note to add your own custom content directly' 
+                }}
+              </p>
+            </div>
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-1">Title</label>
+            <label class="block text-sm font-medium mb-1 flex items-center gap-2">
+              <Type class="h-4 w-4" />
+              Title
+            </label>
             <input
               v-model="newSource.title"
               type="text"
               required
-              class="w-full rounded-md border-input"
+              class="w-full rounded-md border px-3 py-2 bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
           </div>
           
-          <div v-if="sourceType === 'website'">
-            <label class="block text-sm font-medium mb-1">URL</label>
+          <div v-if="sourceType">
+            <label class="block text-sm font-medium mb-1 flex items-center gap-2">
+              <Link2 class="h-4 w-4" />
+              URL
+            </label>
             <input
               v-model="newSource.url"
               type="url"
               required
-              class="w-full rounded-md border-input"
+              class="w-full rounded-md border px-3 py-2 bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
           </div>
           
-          <div v-if="sourceType === 'note'">
-            <label class="block text-sm font-medium mb-1">Content</label>
+          <div v-else>
+            <label class="block text-sm font-medium mb-1 flex items-center gap-2">
+              <FileEdit class="h-4 w-4" />
+              Content
+            </label>
             <textarea
               v-model="newSource.content"
               rows="4"
               required
-              class="w-full rounded-md border-input"
+              class="w-full rounded-md border px-3 py-2 bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             ></textarea>
           </div>
 
@@ -248,10 +273,14 @@ onMounted(() => {
             </button>
             <button
               type="submit"
-              class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+              class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 inline-flex items-center gap-2"
               :disabled="isLoadingSources"
             >
-              Add Source
+              <Loader2 
+                v-if="isLoadingSources" 
+                class="h-4 w-4 animate-spin" 
+              />
+              {{ isLoadingSources ? 'Adding...' : 'Add Source' }}
             </button>
           </div>
         </form>
