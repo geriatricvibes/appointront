@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+
 import { Card, CardContent } from '@/components/ui/card'
-import { cn } from "@/lib/utils"
+
 </script>
 
 <template>

@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 import { dashboardApi } from '@/api/dashboard'
 import NavigationBar from '@/components/layout/NavigationBar.vue'
-import { PlusIcon, TrashIcon, CalendarIcon } from '@heroicons/vue/24/outline/index.js'
+import { PlusIcon, TrashIcon} from '@heroicons/vue/24/outline/index.js'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Loader2, BookOpen, FileText, Type, Link2, FileEdit, CheckCircle2, XCircle, Copy, CheckCheck, Key } from 'lucide-vue-next'
 
@@ -388,7 +388,7 @@ onMounted(() => {
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-1 flex items-center gap-2">
+            <label class="text-sm font-medium mb-1 flex items-center gap-2">
               <Type class="h-4 w-4" />
               Title
             </label>
@@ -401,7 +401,7 @@ onMounted(() => {
           </div>
           
           <div v-if="sourceType">
-            <label class="block text-sm font-medium mb-1 flex items-center gap-2">
+            <label class="text-sm font-medium mb-1 flex items-center gap-2">
               <Link2 class="h-4 w-4" />
               URL
             </label>
@@ -414,7 +414,7 @@ onMounted(() => {
           </div>
           
           <div v-else>
-            <label class="block text-sm font-medium mb-1 flex items-center gap-2">
+            <label class="text-sm font-medium mb-1 flex items-center gap-2">
               <FileEdit class="h-4 w-4" />
               Content
             </label>

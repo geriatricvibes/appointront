@@ -44,7 +44,7 @@
                     </ul>
                   </div>
                   <div class="pt-2 w-full">
-                    <Button variant="discord" asChild class="w-full group-hover:shadow-md transition-all">
+                    <Button variant="outline" asChild class="w-full group-hover:shadow-md transition-all">
                       <a href="https://discord.gg/your-server" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center">
                         Join Server
                         <ExternalLinkIcon class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -160,7 +160,6 @@ import AuroraBackground from '@/components/home/AuroraBackground.vue'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { 
-  MessageSquare as DiscordIcon,
   Mail as MailIcon, 
   ExternalLink as ExternalLinkIcon,
   Twitter as TwitterIcon,

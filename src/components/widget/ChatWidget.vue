@@ -10,6 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { chatApi } from '@/api/chat'
 import { ArrowLeft, Send, Loader2, Calendar, MessageCircle } from 'lucide-vue-next'
+import type { ComponentPublicInstance } from 'vue'
 
 interface Message {
   id: string
@@ -21,9 +22,29 @@ interface Message {
   book?: boolean
 }
 
+interface SchedulingMessageResponse {
+  message: string
+  book: boolean
+  // Add any other properties that might come from the API response
+}
+
 interface CalendlyUserInfo {
   scheduling_url: string
   // ... other fields
+}
+
+interface ApiErrorResponse {
+  status: number
+}
+
+function isApiError(error: unknown): error is { response: ApiErrorResponse } {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof (error as any).response === 'object' &&
+    'status' in (error as any).response
+  )
 }
 
 const isOpen = ref(false)
@@ -52,14 +73,15 @@ const md = new MarkdownIt({
 // Add a ref to store the latest response
 const latestResponse = ref<SchedulingMessageResponse | null>(null)
 
-// Add this ref to track the scroll area
-const scrollAreaRef = ref<HTMLElement | null>(null)
+// Update the ref type to include ComponentPublicInstance
+const scrollAreaRef = ref<ComponentPublicInstance | null>(null)
 
-// Add this function to scroll to bottom
+// Update the scroll function to handle the component instance
 const scrollToBottom = () => {
   nextTick(() => {
-    if (scrollAreaRef.value?.$el) {
-      const scrollContainer = scrollAreaRef.value.$el.querySelector('[data-radix-scroll-area-viewport]')
+    if (scrollAreaRef.value) {
+      const el = (scrollAreaRef.value.$el as HTMLElement)
+      const scrollContainer = el.querySelector('[data-radix-scroll-area-viewport]')
       if (scrollContainer) {
         scrollContainer.scrollTop = scrollContainer.scrollHeight
       }
@@ -169,6 +191,7 @@ const sendMessage = async () => {
   } catch (error) {
     let errorMessage: Message = {
       id: crypto.randomUUID(),
+      content: 'An unexpected error occurred. Please try again.',
       sender: 'bot',
       timestamp: new Date(),
       isError: true,
@@ -182,7 +205,7 @@ const sendMessage = async () => {
         errorMessage.errorType = 'network'
       }
       // Server error
-      else if ('response' in error && error.response?.status >= 500) {
+      else if (isApiError(error) && error.response.status >= 500) {
         errorMessage.content = 'Our server is experiencing issues. Please try again in a few moments.'
         errorMessage.errorType = 'server'
       }
@@ -191,8 +214,6 @@ const sendMessage = async () => {
         errorMessage.content = 'Something went wrong. Please try again or contact support if the issue persists.'
         errorMessage.errorType = 'unknown'
       }
-    } else {
-      errorMessage.content = 'An unexpected error occurred. Please try again.'
     }
 
     messages.value.push(errorMessage)
@@ -236,11 +257,11 @@ const retryLastMessage = async () => {
 
 // Add this watch to initialize Calendly when modal opens
 watch(showCalendly, (newValue) => {
-  if (newValue && calendlyUserInfo.value?.scheduling_url) {
+  if (newValue && calendlyUserInfo.value && calendlyUserInfo.value.scheduling_url) {
     // Wait for DOM to update
     nextTick(() => {
       Calendly.initInlineWidget({
-        url: calendlyUserInfo.value.scheduling_url,
+        url: calendlyUserInfo.value!.scheduling_url,
         parentElement: document.getElementById('calendly-widget'),
         prefill: {},
         utm: {}

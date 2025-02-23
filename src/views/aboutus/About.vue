@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
 import { useHead } from '@vueuse/head';
 import Navbar from '../../components/layout/Navbar.vue';
 import Footer from '../../components/layout/Footer.vue';
 import AuroraBackground from '../../components/home/AuroraBackground.vue';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+// import { Badge } from '@/components/ui/badge';
 
-const router = useRouter();
+// const router = useRouter();
 
-const navigateToAboutDemo = () => {
-  router.push({ path: '/', hash: '#about-section' });
-};
+// // const navigateToAboutDemo = () => {
+// //   router.push({ path: '/', hash: '#about-section' });
+// // };
 
 // Update team members data
 const teamMembers = [
@@ -36,9 +35,9 @@ const teamMembers = [
   }
 ];
 
-const openEmail = (email: string) => {
-  window.location.href = `mailto:${email}`;
-};
+// const openEmail = (email: string) => {
+//   window.location.href = `mailto:${email}`;
+// };
 
 // Update SEO metadata
 useHead({

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
 import Navbar from '../../components/layout/Navbar.vue';
 import Footer from '../../components/layout/Footer.vue';
 import AuroraBackground from '../../components/home/AuroraBackground.vue';
@@ -8,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useHead } from 'unhead';
 
-const router = useRouter();
+
 
 // Update SEO metadata
 useHead({

@@ -66,7 +66,7 @@
   </template>
   
   <script lang="ts" setup>
-  import {computed, ref, onMounted, onUnmounted, watch} from 'vue';
+  import {ref, onMounted, onUnmounted} from 'vue';
   import { cn } from "@/lib/utils";
   
   defineProps({

@@ -11,7 +11,7 @@
   <script setup lang="ts">
   import { useMouse, useDevicePixelRatio } from "@vueuse/core";
   import { onMounted, ref, reactive, computed, watch, onBeforeUnmount } from 'vue'
-  import { getCurrentParticleColor } from '@/utils/theme'
+  import { getCurrentParticleColor } from '@/components/utils/theme.js'
   
   type Circle = {
     x: number;
