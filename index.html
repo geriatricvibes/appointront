@@ -8,11 +8,32 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <title>Vite + Vue + TS</title>
-    <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
+    
+    <!-- Add Chat Widget CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/@justbookme.ai/chat-widget/dist/chat-widget.css">
   </head>
   <body>
     <div id="app"></div>
+    <div id="chat-widget"></div>
+    
+    <!-- Load Vue first -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script type="module" src="/src/main.ts"></script>
+    
+    <!-- Add Chat Widget Script -->
+    <script src="https://unpkg.com/@justbookme.ai/chat-widget/dist/chat-widget.umd.js"></script>
+    <script>
+      window.addEventListener('load', function() {
+        if (window.ChatWidget && typeof window.ChatWidget.initChatWidget === 'function') {
+          window.ChatWidget.initChatWidget({
+            apiKey: "n_F_bl-GUh6jsDdlUILn_P5jUA6RLYMg-mWfy8lsXTo",
+            apiUrl: "https://server.justbookme.ai"
+          });
+        } else {
+          console.error('Chat widget failed to load properly');
+        }
+      });
+    </script>
   </body>
 </html>
   

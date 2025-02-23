@@ -3,13 +3,14 @@ import { ref, computed, onMounted } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 import { dashboardApi } from '@/api/dashboard'
 import NavigationBar from '@/components/layout/NavigationBar.vue'
-import ChatWidget from '@/components/widget/ChatWidget.vue'
 import { PlusIcon, TrashIcon, CalendarIcon } from '@heroicons/vue/24/outline/index.js'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Loader2, BookOpen, FileText, Type, Link2, FileEdit, CheckCircle2, XCircle } from 'lucide-vue-next'
+import { Loader2, BookOpen, FileText, Type, Link2, FileEdit, CheckCircle2, XCircle, Copy, CheckCheck, Key } from 'lucide-vue-next'
 
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
+import { chatApi } from '@/api/chat'
+import { Button } from '@/components/ui/button'
 
 const { user } = useAuth()
 const isLoading = ref(false)
@@ -30,11 +31,41 @@ const newSource = ref({
   content: '' 
 })
 
+const apiKey = ref<string>('')
+const copied = ref(false)
+const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+
+const isLoadingApiKey = ref(true)
+
 const calendlyAuthUrl = computed(() => {
   const clientId = import.meta.env.VITE_CALENDLY_CLIENT_ID
   const redirectUri = `${window.location.origin}/auth/calendly/callback`
   return `https://auth.calendly.com/oauth/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}`
 })
+
+const widgetCode = computed(() => `<!-- Add Chat Widget CSS -->
+<link rel="stylesheet" href="https://unpkg.com/@justbookme.ai/chat-widget/dist/chat-widget.css">
+
+<!-- Chat Widget Container -->
+<div id="chat-widget"></div>
+
+<!-- Load Vue first -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"><\/script>
+
+<!-- Add Chat Widget Script -->
+<script src="https://unpkg.com/@justbookme.ai/chat-widget/dist/chat-widget.umd.js"><\/script>
+<script>
+  window.addEventListener('load', function() {
+    if (window.ChatWidget && typeof window.ChatWidget.initChatWidget === 'function') {
+      window.ChatWidget.initChatWidget({
+        apiKey: "${apiKey.value}",
+        apiUrl: "${baseUrl}"
+      });
+    } else {
+      console.error('Chat widget failed to load properly');
+    }
+  });
+<\/script>`)
 
 const checkCalendlyStatus = async () => {
   try {
@@ -98,9 +129,51 @@ const deleteSource = async (sourceId: string) => {
   }
 }
 
+const loadApiKey = async () => {
+  try {
+    isLoadingApiKey.value = true
+    apiKey.value = await chatApi.getApiKey()
+  } catch (err) {
+    console.error('Failed to load API key', err)
+  } finally {
+    isLoadingApiKey.value = false
+  }
+}
+
+const copyWidgetCode = async () => {
+  const code = `<!-- Add Chat Widget CSS -->
+<link rel="stylesheet" href="https://unpkg.com/@justbookme.ai/chat-widget/dist/chat-widget.css">
+
+<!-- Chat Widget Container -->
+<div id="chat-widget"></div>
+
+<!-- Load Vue first -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"><\/script>
+
+<!-- Add Chat Widget Script -->
+<script src="https://unpkg.com/@justbookme.ai/chat-widget/dist/chat-widget.umd.js"><\/script>
+<script>
+  window.addEventListener('load', function() {
+    if (window.ChatWidget && typeof window.ChatWidget.initChatWidget === 'function') {
+      window.ChatWidget.initChatWidget({
+        apiKey: "${apiKey.value}",
+        apiUrl: "${baseUrl}"
+      });
+    } else {
+      console.error('Chat widget failed to load properly');
+    }
+  });
+<\/script>`
+
+  await navigator.clipboard.writeText(code)
+  copied.value = true
+  setTimeout(() => copied.value = false, 2000)
+}
+
 onMounted(() => {
   checkCalendlyStatus()
   loadSources()
+  loadApiKey()
 })
 </script>
 
@@ -108,15 +181,15 @@ onMounted(() => {
   <div class="min-h-screen flex flex-col bg-background">
     <NavigationBar />
     
-    <main class="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full">
-      <div v-if="user" class="space-y-6">
+    <main class="flex-1 p-3 md:p-8 max-w-7xl mx-auto w-full">
+      <div v-if="user" class="space-y-4">
         <div class="space-y-4">
           <!-- Calendly Card -->
-          <div class="rounded-lg bg-card p-4 shadow-sm border border-border/50">
-            <div class="flex items-center justify-between">
+          <div class="rounded-lg bg-card p-3 md:p-4 shadow-sm border border-border/50">
+            <div class="flex items-center justify-between flex-wrap gap-2">
               <div class="flex items-center gap-2">
                 <img src="@/assets/calendly.png" alt="Calendly" class="h-5 w-5" />
-                <h3 class="font-medium">Calendly Connection</h3>
+                <h3 class="font-medium text-sm md:text-base">Calendly Connection</h3>
               </div>
               
               <div v-if="isLoading">
@@ -148,11 +221,11 @@ onMounted(() => {
           </div>
 
           <!-- Knowledge Sources Card -->
-          <div class="rounded-lg bg-card p-4 shadow-sm border border-border/50">
-            <div class="flex justify-between items-center mb-4">
+          <div class="rounded-lg bg-card p-3 md:p-4 shadow-sm border border-border/50">
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
               <div class="flex items-center gap-2">
                 <BookOpen class="h-5 w-5 text-primary" />
-                <h3 class="font-medium">Knowledge Sources</h3>
+                <h3 class="font-medium text-sm md:text-base">Knowledge Sources</h3>
               </div>
               <button
                 @click="showAddSourceDialog = true"
@@ -176,20 +249,110 @@ onMounted(() => {
               <p class="text-sm text-muted-foreground">No sources added yet</p>
             </div>
 
-            <div v-else class="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+            <div v-else class="space-y-2 max-h-[300px] overflow-y-auto pr-1 md:pr-2">
               <div v-for="source in sources" :key="source.id" 
-                   class="flex justify-between items-center p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors group">
-                <div>
-                  <h4 class="font-medium">{{ source.title }}</h4>
-                  <p v-if="source.url" class="text-sm text-muted-foreground truncate max-w-[250px]">
-                    {{ source.url }}
-                  </p>
+                   class="flex justify-between items-center p-3 md:p-4 bg-card rounded-lg border border-border/50 hover:border-border transition-colors group">
+                <div class="flex items-center gap-2 md:gap-3 min-w-0">
+                  <div class="flex-shrink-0">
+                    <Link2 v-if="source.url" class="h-5 w-5 text-primary" />
+                    <FileText v-else class="h-5 w-5 text-primary" />
+                  </div>
+                  <div class="min-w-0">
+                    <h4 class="font-medium text-foreground text-sm md:text-base truncate">{{ source.title }}</h4>
+                    <p v-if="source.url" class="text-xs md:text-sm text-muted-foreground truncate max-w-full">
+                      {{ source.url }}
+                    </p>
+                    <p v-else class="text-xs md:text-sm text-muted-foreground">Custom note</p>
+                  </div>
                 </div>
                 <button @click="deleteSource(source.id)" 
-                        class="opacity-0 group-hover:opacity-100 text-destructive hover:text-destructive/80 transition-opacity">
-                  <TrashIcon class="h-5 w-5" />
+                        class="flex-shrink-0 opacity-100 md:opacity-0 group-hover:opacity-100 text-destructive hover:text-destructive/80 transition-opacity p-1 hover:bg-destructive/10 rounded-md">
+                  <TrashIcon class="h-4 w-4 md:h-5 md:w-5" />
                 </button>
               </div>
+            </div>
+          </div>
+
+          <!-- Widget Integration Card -->
+          <div class="rounded-lg border bg-card p-4 md:p-6">
+            <div class="flex items-center justify-between mb-4 md:mb-6 flex-wrap gap-2">
+              <div>
+                <h3 class="text-base md:text-lg font-semibold">Widget Integration</h3>
+                <p class="text-xs md:text-sm text-muted-foreground mt-1">
+                  Add the chat widget to your website with this code snippet
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                @click="copyWidgetCode"
+                :disabled="isLoadingApiKey"
+                class="min-w-[100px]"
+              >
+                <template v-if="isLoadingApiKey">
+                  <Loader2 class="h-4 w-4 animate-spin" />
+                </template>
+                <template v-else-if="copied">
+                  <CheckCheck class="h-4 w-4 mr-2" />
+                  Copied!
+                </template>
+                <template v-else>
+                  <Copy class="h-4 w-4 mr-2" />
+                  Copy
+                </template>
+              </Button>
+            </div>
+
+            <div class="relative">
+              <div 
+                v-if="isLoadingApiKey" 
+                class="absolute inset-0 bg-card/50 backdrop-blur-sm flex items-center justify-center rounded-md"
+              >
+                <div class="flex flex-col items-center gap-2">
+                  <Loader2 class="h-6 w-6 animate-spin text-primary" />
+                  <span class="text-sm text-muted-foreground">Loading configuration...</span>
+                </div>
+              </div>
+              
+              <div class="relative rounded-md border bg-muted/50">
+                <!-- Code sections -->
+                <div class="flex items-center justify-between px-4 py-2 border-b">
+                  <div class="flex items-center gap-2">
+                    <code class="text-xs font-mono bg-primary/10 text-primary px-2 py-1 rounded">
+                      HTML
+                    </code>
+                    <span class="text-sm text-muted-foreground">Widget Integration Code</span>
+                  </div>
+                </div>
+                
+                <pre class="p-4 overflow-x-auto text-sm"><code>{{ widgetCode }}</code></pre>
+                
+                <!-- Installation steps -->
+                <div class="border-t px-4 py-3 bg-muted/30">
+                  <h4 class="text-sm font-medium mb-2">Quick Installation Steps:</h4>
+                  <ol class="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
+                    <li>Copy the code snippet above</li>
+                    <li>Paste it before the closing <code class="text-xs bg-muted-foreground/20 px-1 rounded">&lt;/body&gt;</code> tag in your HTML</li>
+                    <li>The chat widget will appear automatically on your website</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+
+            <!-- API Key info -->
+            <div class="mt-4 p-3 rounded-md bg-muted/30 flex items-center gap-3">
+              <div class="p-2 rounded-full bg-primary/10">
+                <Key class="h-4 w-4 text-primary" />
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-medium">Your API Key</p>
+                <p class="text-xs text-muted-foreground mt-0.5">
+                  This key is automatically included in the code snippet above
+                </p>
+              </div>
+              <code class="text-xs bg-muted px-2 py-1 rounded">
+                {{ isLoadingApiKey ? '••••••••' : (apiKey || '').substring(0, 8) + '...' }}
+              </code>
             </div>
           </div>
         </div>
@@ -286,7 +449,5 @@ onMounted(() => {
         </form>
       </DialogContent>
     </Dialog>
-
-    <ChatWidget />
   </div>
 </template> 

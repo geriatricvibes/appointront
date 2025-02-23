@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { chatApi } from '@/api/chat'
-import { ArrowLeft } from 'lucide-vue-next'
+import { ArrowLeft, Send, Loader2, Calendar, MessageCircle } from 'lucide-vue-next'
 
 interface Message {
   id: string
@@ -17,6 +17,8 @@ interface Message {
   sender: 'user' | 'bot'
   timestamp: Date
   isError?: boolean
+  errorType?: 'network' | 'server' | 'unknown' | 'auth'
+  book?: boolean
 }
 
 interface CalendlyUserInfo {
@@ -27,6 +29,7 @@ interface CalendlyUserInfo {
 const isOpen = ref(false)
 const inputMessage = ref('')
 const STORAGE_KEY = 'chat_messages'
+const hasApiKey = ref(false)
 
 const messages = ref<Message[]>(
   JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || [{
@@ -46,16 +49,72 @@ const md = new MarkdownIt({
   linkify: true
 })
 
+// Add a ref to store the latest response
+const latestResponse = ref<SchedulingMessageResponse | null>(null)
+
+// Add this ref to track the scroll area
+const scrollAreaRef = ref<HTMLElement | null>(null)
+
+// Add this function to scroll to bottom
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (scrollAreaRef.value?.$el) {
+      const scrollContainer = scrollAreaRef.value.$el.querySelector('[data-radix-scroll-area-viewport]')
+      if (scrollContainer) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight
+      }
+    }
+  })
+}
+
+// Modify toggleWidget to include scroll behavior
 const toggleWidget = () => {
   isOpen.value = !isOpen.value
   // Reset to chat view when closing widget
   if (!isOpen.value) {
     showCalendly.value = false
+  } else {
+    // Scroll to bottom when opening
+    scrollToBottom()
   }
 }
 
+// Add initialization of API key
+onMounted(async () => {
+  try {
+    // First try to get API key
+    await chatApi.getApiKey()
+    hasApiKey.value = true
+    
+    // Then get Calendly info
+    calendlyUserInfo.value = await chatApi.getUserInfo()
+  } catch (error) {
+    console.error('Failed to initialize chat:', error)
+    messages.value.push({
+      id: crypto.randomUUID(),
+      content: 'Unable to initialize chat. Please try refreshing the page or contact support.',
+      sender: 'bot',
+      timestamp: new Date(),
+      isError: true,
+      errorType: 'auth'
+    })
+  }
+})
+
+// Modify sendMessage to check for API key
 const sendMessage = async () => {
   if (!inputMessage.value.trim()) return
+  if (!hasApiKey.value) {
+    messages.value.push({
+      id: crypto.randomUUID(),
+      content: 'Chat is not properly initialized. Please refresh the page.',
+      sender: 'bot',
+      timestamp: new Date(),
+      isError: true,
+      errorType: 'auth'
+    })
+    return
+  }
 
   const userMessage: Message = {
     id: crypto.randomUUID(),
@@ -79,43 +138,99 @@ const sendMessage = async () => {
       is_current_message: true
     })
 
+    // Parse the response if it's a string
+    const parsedResponse = typeof response === 'string' ? JSON.parse(response) : response
+    
+    // Store the parsed response
+    latestResponse.value = parsedResponse
+
     const botMessage: Message = {
       id: crypto.randomUUID(),
-      content: response.message,
-      sender: 'bot' as const,
-      timestamp: new Date()
+      content: parsedResponse.message,
+      sender: 'bot',
+      timestamp: new Date(),
+      book: parsedResponse.book
     }
     messages.value.push(botMessage)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.value))
-    
-    initCalendly(response.message)
-  } catch (error) {
-    const errorMessage: Message = {
-      id: crypto.randomUUID(),
-      content: 'Sorry, I encountered an error while processing your request. Please try again.',
-      sender: 'bot' as const,
-      timestamp: new Date(),
-      isError: true
+
+    // If booking is recommended, send a separate message with the scheduling link
+    if (parsedResponse.book && calendlyUserInfo.value?.scheduling_url) {
+      const schedulingMessage: Message = {
+        id: crypto.randomUUID(),
+        content: `📅 **Schedule Your Meeting**\n\nClick the button below to schedule a time that works best for you.`,
+        sender: 'bot',
+        timestamp: new Date(),
+        book: true
+      }
+      messages.value.push(schedulingMessage)
     }
+    
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.value))
+  } catch (error) {
+    let errorMessage: Message = {
+      id: crypto.randomUUID(),
+      sender: 'bot',
+      timestamp: new Date(),
+      isError: true,
+      errorType: 'unknown'
+    }
+
+    if (error instanceof Error) {
+      // Network error
+      if ('message' in error && error.message.includes('Network')) {
+        errorMessage.content = 'Unable to connect to the server. Please check your internet connection and try again.'
+        errorMessage.errorType = 'network'
+      }
+      // Server error
+      else if ('response' in error && error.response?.status >= 500) {
+        errorMessage.content = 'Our server is experiencing issues. Please try again in a few moments.'
+        errorMessage.errorType = 'server'
+      }
+      // Unknown error
+      else {
+        errorMessage.content = 'Something went wrong. Please try again or contact support if the issue persists.'
+        errorMessage.errorType = 'unknown'
+      }
+    } else {
+      errorMessage.content = 'An unexpected error occurred. Please try again.'
+    }
+
     messages.value.push(errorMessage)
     localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.value))
     console.error('Chat error:', error)
   } finally {
     isLoading.value = false
+    scrollToBottom()
   }
 }
 
-onMounted(async () => {
-  try {
-    calendlyUserInfo.value = await chatApi.getUserInfo()
-  } catch (error) {
-    console.error('Failed to fetch Calendly info:', error)
-  }
-})
-
-const initCalendly = (content: string) => {
-  if (content.includes('<book>') && calendlyUserInfo.value?.scheduling_url) {
-    showCalendly.value = true
+// Modify retryLastMessage to handle API key errors
+const retryLastMessage = async () => {
+  const lastErrorMessage = messages.value[messages.value.length - 1]
+  
+  if (lastErrorMessage.errorType === 'auth') {
+    try {
+      await chatApi.getApiKey()
+      hasApiKey.value = true
+      messages.value = messages.value.slice(0, -1) // Remove error message
+      
+      // Retry last user message if exists
+      const lastUserMessage = [...messages.value].reverse().find(m => m.sender === 'user')
+      if (lastUserMessage) {
+        inputMessage.value = lastUserMessage.content
+        await sendMessage()
+      }
+    } catch (error) {
+      console.error('Failed to reinitialize API key:', error)
+    }
+  } else {
+    // Handle other error types as before
+    const lastUserMessage = [...messages.value].reverse().find(m => m.sender === 'user')
+    if (lastUserMessage) {
+      messages.value = messages.value.slice(0, -1)
+      inputMessage.value = lastUserMessage.content
+      await sendMessage()
+    }
   }
 }
 
@@ -144,7 +259,7 @@ watch(showCalendly, (newValue) => {
       class="rounded-full h-12 w-12 shadow-lg"
       @click="toggleWidget"
     >
-      <i-heroicons-chat-bubble-left-right class="h-6 w-6" />
+      <MessageCircle class="h-6 w-6" />
     </Button>
 
     <!-- Chat Window -->
@@ -188,49 +303,72 @@ watch(showCalendly, (newValue) => {
           leave-to-class="opacity-0"
         >
           <div v-if="!showCalendly">
-            <CardContent>
-              <ScrollArea class="h-[400px] pr-4">
-                <div class="space-y-4">
+            <CardContent class="p-0">
+              <ScrollArea ref="scrollAreaRef" class="h-[400px]">
+                <div class="space-y-4 p-4">
                   <div
                     v-for="message in messages"
                     :key="message.id"
                     :class="[
-                      'flex',
+                      'flex animate-in fade-in slide-in-from-bottom-2 duration-300',
                       message.sender === 'user' ? 'justify-end' : 'justify-start'
                     ]"
                   >
                     <div
                       :class="[
-                        'rounded-lg px-4 py-2 max-w-[80%] prose prose-sm dark:prose-invert',
+                        'rounded-2xl px-4 py-1.5 max-w-[80%] prose prose-sm dark:prose-invert shadow-sm transition-all duration-200',
                         message.sender === 'user'
-                          ? 'bg-primary text-primary-foreground'
+                          ? 'bg-primary text-primary-foreground message-user'
                           : message.isError
-                            ? 'bg-destructive/10 text-destructive'
-                            : 'bg-muted'
+                            ? 'bg-destructive/10 text-destructive message-error'
+                            : 'bg-muted message-bot'
                       ]"
                     >
-                      <div v-html="md.render(message.content)" />
-                      <div v-if="message.content.includes('<book>') && calendlyUserInfo?.scheduling_url" class="mt-2">
+                      <div v-html="md.render(message.content)" class="message-content" />
+                      <div v-if="message.isError" class="mt-2">
                         <Button
-                          variant="secondary"
+                          variant="outline"
                           size="sm"
+                          class="hover:scale-105 transition-transform"
+                          @click="retryLastMessage"
+                        >
+                          Try Again
+                        </Button>
+                      </div>
+                      <div 
+                        v-if="message.sender === 'bot' && message.content.includes('Schedule Your Meeting')" 
+                        class="mt-3"
+                      >
+                        <Button
+                          variant="default"
+                          size="sm"
+                          class="w-full hover:scale-102 transition-transform flex items-center justify-center gap-1.5 font-medium"
                           @click="showCalendly = true"
                         >
-                          Schedule a meeting
+                          <Calendar class="h-4 w-4" />
+                          Schedule Meeting
                         </Button>
                       </div>
                     </div>
                   </div>
-                  <div v-if="isLoading" class="flex justify-start">
-                    <div class="bg-muted rounded-lg px-4 py-2">
-                      Thinking...
+                  <div 
+                    v-if="isLoading" 
+                    class="flex justify-start animate-in fade-in slide-in-from-bottom-2 duration-300"
+                  >
+                    <div class="bg-muted rounded-2xl px-4 py-2">
+                      <div class="flex gap-1 items-center">
+                        <span>Thinking</span>
+                        <span class="animate-bounce">.</span>
+                        <span class="animate-bounce" style="animation-delay: 0.2s">.</span>
+                        <span class="animate-bounce" style="animation-delay: 0.4s">.</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </ScrollArea>
             </CardContent>
 
-            <CardFooter>
+            <CardFooter class="pt-3 pb-4 px-4">
               <form
                 class="flex w-full gap-2"
                 @submit.prevent="sendMessage"
@@ -245,7 +383,15 @@ watch(showCalendly, (newValue) => {
                   type="submit"
                   :disabled="isLoading"
                 >
-                  Send
+                  <Loader2 
+                    v-if="isLoading" 
+                    class="h-4 w-4 animate-spin"
+                  />
+                  <Send
+                    v-else
+                    class="h-4 w-4"
+                  />
+                  <span class="sr-only">Send message</span>
                 </Button>
               </form>
             </CardFooter>

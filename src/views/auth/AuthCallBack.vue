@@ -43,7 +43,7 @@ onMounted(async () => {
 async function handleSession(session: any) {
   console.log('Debug: Handling session:', session) // Debug log
 
-  // First, ensure user exists in users table
+  // Only upsert user data
   const { error: upsertError } = await supabase
     .from('users')
     .upsert({
@@ -58,28 +58,6 @@ async function handleSession(session: any) {
   if (upsertError) {
     console.error('Debug: Error upserting user:', upsertError) // Debug log
     throw upsertError
-  }
-
-  // Then save tokens - including provider_refresh_token
-  const tokenData = {
-    user_id: session.user.id,
-    provider_token: session.provider_token || null,
-    refresh_token: session.provider_refresh_token|| null,
-    expires_at: session.expires_in ? new Date(Date.now() + (session.expires_in * 1000)).toISOString() : null,
-    updated_at: new Date().toISOString()
-  }
-
-  console.log('Debug: Saving token data:', tokenData) // Debug log
-
-  const { error: tokenError } = await supabase
-    .from('user_tokens')
-    .upsert(tokenData, {
-      onConflict: 'user_id'
-    })
-
-  if (tokenError) {
-    console.error('Debug: Error saving tokens:', tokenError) // Debug log
-    throw tokenError
   }
 }
 </script>
