@@ -11,8 +11,8 @@
         <span class="font-semibold text-xl">JustBookMe</span>
       </RouterLink>
 
-      <!-- Main Navigation -->
-      <div class="flex items-center gap-2 flex-1 justify-center">
+      <!-- Main Navigation - Desktop -->
+      <div class="hidden md:flex items-center gap-2 flex-1 justify-center">
         <RouterLink 
           v-for="item in navigationItems" 
           :key="item.path"
@@ -27,6 +27,12 @@
 
       <!-- User Profile Section -->
       <div class="flex items-center flex-1 justify-end">
+        <!-- Mobile Menu Button -->
+        <Button variant="ghost" size="icon" class="md:hidden mr-2" @click="isMobileMenuOpen = !isMobileMenuOpen">
+          <Menu v-if="!isMobileMenuOpen" class="h-5 w-5" />
+          <X v-else class="h-5 w-5" />
+        </Button>
+
         <DropdownMenu v-if="user">
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" class="flex items-center gap-2">
@@ -36,7 +42,7 @@
                   {{ getUserInitial }}
                 </AvatarFallback>
               </Avatar>
-              <div class="flex flex-col items-start">
+              <div class="hidden sm:flex flex-col items-start">
                 <span class="text-sm font-medium line-clamp-1">
                   {{ getUserDisplayName }}
                 </span>
@@ -69,12 +75,27 @@
         </DropdownMenu>
       </div>
     </nav>
+
+    <!-- Mobile Navigation Menu -->
+    <div v-if="isMobileMenuOpen" class="md:hidden px-4 py-2 bg-background border-t">
+      <RouterLink 
+        v-for="item in navigationItems" 
+        :key="item.path"
+        :to="item.path"
+        class="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+        :class="{ 'bg-accent text-accent-foreground': isCurrentRoute(item.path) }"
+        @click="isMobileMenuOpen = false"
+      >
+        <component :is="item.icon" class="h-5 w-5" />
+        <span>{{ item.name }}</span>
+      </RouterLink>
+    </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { User, Settings, LogOut, LayoutDashboard, HelpCircle, ChevronsUpDown } from 'lucide-vue-next'
+import { computed, ref } from 'vue'
+import { User, Settings, LogOut, LayoutDashboard, HelpCircle, ChevronsUpDown, Menu, X } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import {
@@ -110,4 +131,6 @@ const handleSignOut = async () => {
   await signOut()
   router.push('/auth')
 }
+
+const isMobileMenuOpen = ref(false)
 </script>
