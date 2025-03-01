@@ -153,6 +153,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { useCommonMeta } from '../../composables/useCommonMeta'
 import Navbar from '@/components/layout/Navbar.vue'
 import Footer from '@/components/layout/Footer.vue'
 import HyperText from '@/components/ui/hyper/HyperText.vue'
@@ -166,8 +167,17 @@ import {
   Instagram as InstagramIcon
 } from 'lucide-vue-next'
 
-// Scroll to top on mount
+// Get the setPageMeta function from our composable
+const { setPageMeta } = useCommonMeta();
+
+// Scroll to top on mount and set meta tags
 onMounted(() => {
+  // Set the meta tags for the contact page
+  setPageMeta(
+    'Contact Us', 
+    'Get in touch with the JustBookMe team. We\'re here to help with any questions about our intelligent appointment scheduling and customer engagement solutions.'
+  );
+  
   window.scrollTo(0, 0)
 })
 </script>

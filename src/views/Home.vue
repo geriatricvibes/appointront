@@ -37,17 +37,17 @@ onMounted(() => {
   
   // Update meta tags
   updateMeta({
-    title: 'geriatricwriters - Smart Writing Tools Tailored for the Golden Years',
-    description: 'Revolutionize your writing! Build interactive knowledge bases, refine your content, and captivate your readers like never before.',
+    title: 'JustBookMe - Intelligent Appointment Scheduling',
+    description: 'Streamlining appointments and customer engagement through intelligent automation. Simplify your booking process today!',
     meta: [
-      { property: 'og:title', content: 'geriatricwriters - Smart Writing Tools Tailored for the Golden Years' },
-      { property: 'og:description', content: 'Revolutionize your writing! Build interactive knowledge bases, refine your content, and captivate your readers like never before.' },
-      { property: 'og:image', content: 'https://www.geriatricwriters.com/og-image.jpg' },
-      { property: 'og:url', content: 'https://www.geriatricwriters.com' },
+      { property: 'og:title', content: 'JustBookMe - Intelligent Appointment Scheduling' },
+      { property: 'og:description', content: 'Streamlining appointments and customer engagement through intelligent automation. Simplify your booking process today!' },
+      { property: 'og:image', content: 'https://www.justbookme.ai/calendar-sync.png' },
+      { property: 'og:url', content: 'https://www.justbookme.ai' },
       { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: 'geriatricwriters - Smart Writing Tools Tailored for the Golden Years' },
-      { name: 'twitter:description', content: 'Revolutionize your writing! Build interactive knowledge bases, refine your content, and captivate your readers like never before.' },
-      { name: 'twitter:image', content: 'https://www.geriatricwriters.com/twitter-card.jpg' }
+      { name: 'twitter:title', content: 'JustBookMe - Intelligent Appointment Scheduling' },
+      { name: 'twitter:description', content: 'Streamlining appointments and customer engagement through intelligent automation. Simplify your booking process today!' },
+      { name: 'twitter:image', content: 'https://www.justbookme.ai/calendar-sync.png' }
     ]
   })
 

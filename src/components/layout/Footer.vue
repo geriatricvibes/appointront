@@ -6,11 +6,17 @@
         <!-- Company Info -->
         <div class="space-y-4">
           <div class="flex items-center gap-2">
-            <img src="@/assets/logo transaprent copy.png" alt="AppointAI Logo" class="h-8 w-8" />
+            <img src="/calendar-sync.png" alt="JustBookMe Logo" class="h-5 w-5 dark:invert" />
             <h3 class="text-2xl font-semibold text-foreground">JustBookMe</h3>
           </div>
           <p class="text-sm text-muted-foreground">
             Streamlining appointments and customer engagement through intelligent automation.
+          </p>
+          <p class="text-sm text-muted-foreground">
+            <a href="mailto:contact@justbookme.ai" class="hover:text-primary transition-colors">contact@justbookme.ai</a>
+          </p>
+          <p class="text-sm text-muted-foreground">
+            <a href="https://www.justbookme.ai" class="hover:text-primary transition-colors">www.justbookme.ai</a>
           </p>
           <div class="flex space-x-4">
             <Button 

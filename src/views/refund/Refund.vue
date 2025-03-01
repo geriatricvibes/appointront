@@ -1,48 +1,25 @@
-<script lang="ts">
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import { useCommonMeta } from '../../composables/useCommonMeta';
 import Navbar from '../../components/layout/Navbar.vue'
 import Footer from '../../components/layout/Footer.vue'
 
-export default {
-  components: {
-    Navbar,
-    Footer
-  },
-  mounted() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant'
-    })
-  },
-  head: {
-    title: 'Refund Policy | geriatricwriters',
-    meta: [
-      {
-        name: 'description',
-        content: 'Learn about geriatricwriters refund policy. We outline our refund eligibility criteria, process, and timelines to ensure transparency in all our transactions.'
-      },
-      {
-        property: 'og:title',
-        content: 'Refund Policy | geriatricwriters'
-      },
-      {
-        property: 'og:description',
-        content: 'Learn about geriatricwriters refund policy. We outline our refund eligibility criteria, process, and timelines to ensure transparency in all our transactions.'
-      },
-      {
-        property: 'og:type',
-        content: 'website'
-      },
-      {
-        name: 'twitter:title',
-        content: 'Refund Policy | geriatricwriters'
-      },
-      {
-        name: 'twitter:description',
-        content: 'Learn about geriatricwriters refund policy. We outline our refund eligibility criteria, process, and timelines to ensure transparency in all our transactions.'
-      }
-    ]
-  }
-}
+// Get the setPageMeta function from our composable
+const { setPageMeta } = useCommonMeta();
+
+onMounted(() => {
+  // Set the meta tags for the refund policy page
+  setPageMeta(
+    'Refund Policy', 
+    'Learn about JustBookMe refund policy. We outline our refund eligibility criteria, process, and timelines to ensure transparency in all our transactions.'
+  );
+  
+  // Scroll to top when the page loads
+  window.scrollTo({
+    top: 0,
+    behavior: 'instant'
+  });
+});
 </script>
 
 <template>

@@ -3,6 +3,11 @@
     <nav class="flex h-16 items-center px-4 max-w-7xl mx-auto">
       <!-- Logo/Brand -->
       <RouterLink to="/" class="flex items-center gap-2 flex-1">
+        <img 
+          src="/calendar-sync.png" 
+          alt="JustBookMe Logo" 
+          class="h-5 w-5 dark:invert"
+        />
         <span class="font-semibold text-xl">JustBookMe</span>
       </RouterLink>
 

@@ -7,7 +7,7 @@ import ParticleBackground from '@/components/home/ParticleBackground.vue'
 
 const router = useRouter()
 
-const flipWords = ['appointments', 'customer queries', 'reminders', 'meetings', 'follow-ups']
+const flipWords = ['Businesses', 'Appointments', 'Customer Service', 'Client Follow-ups', 'Sales Teams']
 
 const scrollToFeatures = () => {
   const aboutSection = document.getElementById('about-section')
@@ -29,7 +29,7 @@ const navigateToAuth = () => {
     <div class="container mx-auto px-4 relative z-20">
       <div class="max-w-4xl mx-auto text-center space-y-6">
         <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold text-foreground tracking-tight">
-          JustBookMe<FlipWords
+          AI Assistant for<FlipWords
             :words="flipWords"
             :duration="3000"
             class="text-primary"
@@ -37,7 +37,7 @@ const navigateToAuth = () => {
         </h1>
         
         <p class="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-          Smart AI chatbot that handles appointments, answers customer queries, and sends timely reminders across websites and phone numbers
+          Your 24/7 virtual assistant that books appointments, answers questions, and follows up with clients automatically
         </p>
 
         <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mt-8">
@@ -46,7 +46,7 @@ const navigateToAuth = () => {
             size="lg"
             class="group"
           >
-            <span>Deploy Your Bot</span>
+            <span>Get Started Free</span>
             <SparklesIcon 
               class="h-5 w-5 ml-2 transition-transform group-hover:rotate-12" 
             />
@@ -58,7 +58,7 @@ const navigateToAuth = () => {
             size="lg"
             class="group"
           >
-            See Features
+            See How It Works
             <ChevronRightIcon 
               class="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1" 
             />

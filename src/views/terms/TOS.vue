@@ -1,24 +1,19 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { useCommonMeta } from '../../composables/useCommonMeta'
 import Navbar from '../../components/layout/Navbar.vue'
 import Footer from '../../components/layout/Footer.vue'
-import { useHead } from '@vueuse/head'
 
-// Add useMeta composable if you're using @vueuse/head or similar
-useHead({
-  title: 'Terms of Service | geriatricwriters',
-  meta: [
-    { name: 'description', content: 'Terms and conditions for using geriatricwriters services. Read our terms of service to understand your rights and obligations when using our platform.' },
-    { property: 'og:title', content: 'Terms of Service | geriatricwriters' },
-    { property: 'og:description', content: 'Terms and conditions for using geriatricwriters services. Read our terms of service to understand your rights and obligations when using our platform.' },
-    { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: 'https://geriatricwriters.com/terms-of-use' },
-    { name: 'twitter:title', content: 'Terms of Service | geriatricwriters' },
-    { name: 'twitter:description', content: 'Terms and conditions for using geriatricwriters services. Read our terms of service to understand your rights and obligations when using our platform.' },
-  ]
-})
+// Get the setPageMeta function from our composable
+const { setPageMeta } = useCommonMeta();
 
 onMounted(() => {
+  // Set the meta tags for the terms of service page
+  setPageMeta(
+    'Terms of Service', 
+    'Terms and conditions for using JustBookMe services. Read our terms of service to understand your rights and obligations when using our platform.'
+  );
+  
   // Scroll to top when component is mounted
   window.scrollTo({
     top: 0,

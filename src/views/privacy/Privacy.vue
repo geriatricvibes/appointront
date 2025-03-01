@@ -1,52 +1,25 @@
-<script lang="ts">
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import { useCommonMeta } from '../../composables/useCommonMeta';
 import Navbar from '../../components/layout/Navbar.vue'
 import Footer from '../../components/layout/Footer.vue'
 
-export default {
-  components: {
-    Navbar,
-    Footer
-  },
-  mounted() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant'
-    })
-  },
-  head: {
-    title: 'Privacy Policy | JustBookMe',
-    meta: [
-      {
-        name: 'description',
-        content: 'Privacy Policy for JustBookMe - Learn how we collect, use, and protect your personal information. Read our comprehensive privacy policy to understand your rights and our data practices.'
-      },
-      {
-        property: 'og:title',
-        content: 'Privacy Policy | JustBookMe'
-      },
-      {
-        property: 'og:description',
-        content: 'Privacy Policy for JustBookMe - Learn how we collect, use, and protect your personal information. Read our comprehensive privacy policy to understand your rights and our data practices.'
-      },
-      {
-        property: 'og:type',
-        content: 'website'
-      },
-      {
-        property: 'og:url',
-        content: 'https://justbookme.com/privacy-policy'
-      },
-      {
-        name: 'twitter:title',
-        content: 'Privacy Policy | JustBookMe'
-      },
-      {
-        name: 'twitter:description',
-        content: 'Privacy Policy for JustBookMe - Learn how we collect, use, and protect your personal information. Read our comprehensive privacy policy to understand your rights and our data practices.'
-      }
-    ]
-  }
-}
+// Get the setPageMeta function from our composable
+const { setPageMeta } = useCommonMeta();
+
+onMounted(() => {
+  // Set the meta tags for the privacy policy page
+  setPageMeta(
+    'Privacy Policy', 
+    'Privacy Policy for JustBookMe - Learn how we collect, use, and protect your personal information. Read our comprehensive privacy policy to understand your rights and our data practices.'
+  );
+  
+  // Scroll to top when the page loads
+  window.scrollTo({
+    top: 0,
+    behavior: 'instant'
+  });
+});
 </script>
 
 <template>

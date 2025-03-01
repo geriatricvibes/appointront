@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useHead } from '@vueuse/head';
+import { useCommonMeta } from '../../composables/useCommonMeta';
 import Navbar from '../../components/layout/Navbar.vue';
 import Footer from '../../components/layout/Footer.vue';
 import AuroraBackground from '../../components/home/AuroraBackground.vue';
@@ -40,41 +40,13 @@ const teamMembers = [
 // };
 
 // Update SEO metadata
-useHead({
-  title: 'About Us | JustBookMe',
-  meta: [
-    {
-      name: 'description',
-      content: 'Meet the team behind JustBookMe - Your intelligent appointment scheduling and customer engagement solution powered by advanced AI technology.'
-    },
-    {
-      name: 'keywords',
-      content: 'JustBookMe, appointment scheduling, AI chatbot, business automation, customer engagement'
-    },
-    {
-      property: 'og:title',
-      content: 'About Us | JustBookMe'
-    },
-    {
-      property: 'og:description',
-      content: 'Meet the team behind JustBookMe - Your intelligent appointment scheduling and customer engagement solution powered by advanced AI technology.'
-    },
-    {
-      property: 'og:type',
-      content: 'website'
-    },
-    {
-      name: 'twitter:title',
-      content: 'About Us | JustBookMe'
-    },
-    {
-      name: 'twitter:description',
-      content: 'Meet the team behind JustBookMe - Your intelligent appointment scheduling and customer engagement solution powered by advanced AI technology.'
-    }
-  ]
-});
+const { setPageMeta } = useCommonMeta();
 
 onMounted(() => {
+  setPageMeta(
+    'About Us', 
+    'Meet the team behind JustBookMe - Your intelligent appointment scheduling and customer engagement solution powered by advanced AI technology.'
+  );
   window.scrollTo(0, 0);
 });
 </script>

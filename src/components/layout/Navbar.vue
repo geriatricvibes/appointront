@@ -71,9 +71,9 @@ onMounted(() => {
           class="mr-auto flex items-center space-x-2"
         >
           <img 
-            src="@/assets/logo transaprent copy.png" 
-            alt="ApointAI Logo" 
-            class="h-8 w-8"
+            src="/calendar-sync.png" 
+            alt="JustBookMe Logo" 
+            class="h-5 w-5 dark:invert"
           />
           <span class="text-xl font-bold">
             JustBookMe<span class="text-primary"></span>

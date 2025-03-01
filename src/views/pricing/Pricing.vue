@@ -1,54 +1,23 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import { useCommonMeta } from '../../composables/useCommonMeta';
 import Navbar from '../../components/layout/Navbar.vue';
 import Footer from '../../components/layout/Footer.vue';
 import AuroraBackground from '../../components/home/AuroraBackground.vue';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useHead } from 'unhead';
 
-
-
-// Update SEO metadata
-useHead({
-  title: 'Pricing - JustBookMe',
-  meta: [
-    {
-      name: 'description',
-      content: 'Choose the perfect plan for your appointment scheduling chatbot. Let JustBookMe handle your appointments, answer customer queries, and boost attendance with smart reminders.',
-    },
-    {
-      property: 'og:title',
-      content: 'Pricing - JustBookMe',
-    },
-    {
-      property: 'og:description',
-      content: 'Choose the perfect plan for your appointment scheduling chatbot. Let JustBookMe handle your appointments, answer customer queries, and boost attendance with smart reminders.',
-    },
-    {
-      property: 'og:type',
-      content: 'website',
-    },
-    {
-      property: 'og:url',
-      content: 'https://justbookme.com/pricing',
-    },
-    {
-      name: 'twitter:card',
-      content: 'summary_large_image',
-    },
-    {
-      name: 'twitter:title',
-      content: 'Pricing - JustBookMe',
-    },
-    {
-      name: 'twitter:description',
-      content: 'Choose the perfect plan for your appointment scheduling chatbot. Let JustBookMe handle your appointments, answer customer queries, and boost attendance with smart reminders.',
-    },
-  ],
-});
+// Get the setPageMeta function from our composable
+const { setPageMeta } = useCommonMeta();
 
 onMounted(() => {
+  // Set the meta tags for the pricing page
+  setPageMeta(
+    'Pricing', 
+    'Choose the perfect plan for your appointment scheduling chatbot. Let JustBookMe handle your appointments, answer customer queries, and boost attendance with smart reminders.'
+  );
+  
+  // Scroll to top when the page loads
   window.scrollTo(0, 0);
 });
 </script>
