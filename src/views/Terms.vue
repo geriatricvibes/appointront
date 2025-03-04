@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useCommonMeta } from '@/composables/useCommonMeta'
-import Navbar from '@/components/layout/Navbar.vue'
-import Footer from '@/components/layout/Footer.vue'
+import { useCommonMeta } from '../composables/useCommonMeta'
+import Navbar from '../components/layout/Navbar.vue'
+import Footer from '../components/layout/Footer.vue'
 
 // Get the setPageMeta function from our composable
 const { setPageMeta } = useCommonMeta();
@@ -49,15 +49,15 @@ const sections = [
     <div class="relative">
       <div class="relative z-10">
         <div class="container mx-auto px-4 relative z-10 py-12 md:py-40">
-          <div class="prose dark:prose-invert max-w-4xl mx-auto [counter-reset:section_counter]">
-            <h1 class="text-2xl md:text-4xl font-medium mb-4 md:mb-6 text-center dark:text-white text-black">Terms and Conditions</h1>
-            <p class="text-xs md:text-sm mb-6 md:mb-8 text-center dark:text-gray-300 text-gray-700">Last updated: {{ lastUpdated }}</p>
-            <p class="text-sm md:text-base mb-6 md:mb-8 dark:text-gray-200 text-gray-800">Please read these terms and conditions carefully before using Our Service.</p>
+          <div class="prose prose-invert max-w-4xl mx-auto [counter-reset:section_counter]">
+            <h1 class="text-2xl md:text-4xl font-medium mb-4 md:mb-6 text-center">Terms and Conditions</h1>
+            <p class="text-xs md:text-sm mb-6 md:mb-8 text-center">Last updated: {{ lastUpdated }}</p>
+            <p class="text-sm md:text-base mb-6 md:mb-8">Please read these terms and conditions carefully before using Our Service.</p>
 
             <section class="mb-6 md:mb-8">
               <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
                 {{ sections[0] }}
-                </h2>
+              </h2>
               <p class="mb-4">These are the Terms and Conditions governing the use of this Service and the agreement that operates between you and the Company. These Terms and Conditions set out the rights and obligations of all users regarding the use of the Service.</p>
 
               <p class="mb-4">Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms and Conditions. These Terms and Conditions apply to all visitors, users, and others who access or use the Service.</p>
@@ -97,7 +97,7 @@ const sections = [
                 <li>Your address, telephone number, and email address.</li>
                 <li>A statement by You that You have a good faith belief that the disputed use is not authorized by the copyright owner, its agent, or the law.</li>
                 <li>A statement by You, made under penalty of perjury, that the above information in Your notice is accurate and that You are the copyright owner or authorized to act on the copyright owner's behalf.</li>
-                    </ul>
+              </ul>
 
               <p>You can contact our copyright agent via email at {{ email }}. Upon receipt of a notification, the Company will take whatever action, in its sole discretion, it deems appropriate, including removing the challenged content from the Service.</p>
             </section>
@@ -105,7 +105,7 @@ const sections = [
             <section class="mb-6 md:mb-8">
               <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
                 {{ sections[3] }}
-                </h2>
+              </h2>
               <p class="mb-4">The Service and its original content (excluding Content provided by you or other users), features, and functionality are and will remain the exclusive property of the Company and its licensors.</p>
 
               <p class="mb-4">The Service is protected by copyright, trademark, and other laws of both the Country and foreign countries.</p>
@@ -116,21 +116,21 @@ const sections = [
             <section class="mb-6 md:mb-8">
               <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
                 {{ sections[4] }}
-                </h2>
+              </h2>
               <p>We value your feedback and are always looking for ways to improve our services. If you have any questions, comments, or concerns about our services, please feel free to contact us.</p>
             </section>
 
             <section class="mb-6 md:mb-8">
               <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
                 {{ sections[5] }}
-                </h2>
+              </h2>
               <p>Our Service may contain links to third-party websites or services that are not owned or controlled by JustBookMe.AI. JustBookMe.AI has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third-party websites or services. You further acknowledge and agree that JustBookMe.AI shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with the use of or reliance on any such content, goods or services available on or through any such website or service.</p>
             </section>
 
             <section class="mb-6 md:mb-8">
               <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
                 {{ sections[6] }}
-                </h2>
+              </h2>
               <p>JustBookMe.AI may terminate your access to and use of the Service at any time, without notice or liability, for any reason whatsoever, including without limitation if you breach these Terms and Conditions.</p>
             </section>
 
@@ -144,35 +144,35 @@ const sections = [
             <section class="mb-6 md:mb-8">
               <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
                 {{ sections[8] }}
-                </h2>
+              </h2>
               <p>The Service is provided on an "AS IS" and "AS AVAILABLE" basis. JustBookMe.AI makes no representations or warranties of any kind, express or implied, as to the operation of the Service or the information, content, materials, or products included on or through the Service.</p>
             </section>
 
             <section class="mb-6 md:mb-8">
               <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
                 {{ sections[9] }}
-                </h2>
+              </h2>
               <p>These Terms and Conditions shall be governed by and construed in accordance with the laws of the Country, without regard to its conflict of law provisions.</p>
             </section>
 
             <section class="mb-6 md:mb-8">
               <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
                 {{ sections[10] }}
-                </h2>
+              </h2>
               <p>Any dispute arising out of or related to these Terms and Conditions shall be subject to the exclusive jurisdiction of the courts of the Country.</p>
             </section>
 
             <section class="mb-6 md:mb-8">
               <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
                 {{ sections[11] }}
-                </h2>
+              </h2>
               <p>JustBookMe.AI reserves the right, at its sole discretion, to modify or replace these Terms and Conditions at any time. If a revision is material, we will provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.</p>
             </section>
 
             <section class="mb-6 md:mb-8">
               <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
                 {{ sections[12] }}
-                </h2>
+              </h2>
               <p class="text-sm md:text-base mb-4">If you have any questions about these Terms and Conditions, You can contact us:</p>
 
               <ul class="text-sm md:text-base list-disc pl-6 space-y-2">
@@ -181,59 +181,34 @@ const sections = [
                 <li>By mail: <pre class="text-sm whitespace-pre-line">{{ companyInfo }}</pre></li>
               </ul>
             </section>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
     </div>
     <Footer />
   </main>
 </template>
 
 <style lang="postcss">
-    :global(body) {
-        @apply dark:bg-black bg-white;
-    }
-
-    h1, h2 {
-    @apply tracking-tight dark:text-white text-black;
+  :global(body) {
+    @apply dark:bg-black bg-white;
   }
 
-  h3 {
-    @apply dark:text-gray-100 text-gray-900;
-  }
-
-  p {
-    @apply dark:text-gray-200 text-gray-800;
+  h1, h2 {
+    @apply tracking-tight;
   }
 
   ul {
-    @apply list-disc pl-5 dark:text-gray-200 text-gray-800;
+    @apply list-disc pl-5 dark:text-gray-300 text-gray-600;
   }
 
-  /* Fix for text color in dark/light mode */
-  .prose {
-    @apply dark:text-gray-200 text-gray-800;
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.8s ease;
   }
 
-  /* Ensure section numbers are visible */
-  .before\:text-primary {
-    @apply before:dark:text-white before:text-black;
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
   }
-
-  /* Ensure links are visible */
-  a {
-    @apply dark:text-blue-400 text-blue-600 hover:underline;
-    }
-
-    .fade-enter-active,
-    .fade-leave-active {
-        transition: opacity 0.8s ease;
-    }
-
-    .fade-enter-from,
-    .fade-leave-to {
-        opacity: 0;
-    }
-</style>
-
-
+</style> 

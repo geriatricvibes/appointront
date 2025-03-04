@@ -1,98 +1,109 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { useCommonMeta } from '../../composables/useCommonMeta';
-import Navbar from '../../components/layout/Navbar.vue'
-import Footer from '../../components/layout/Footer.vue'
+import { onMounted } from 'vue'
+import { useCommonMeta } from '@/composables/useCommonMeta'
+import Navbar from '@/components/layout/Navbar.vue'
+import Footer from '@/components/layout/Footer.vue'
 
 // Get the setPageMeta function from our composable
 const { setPageMeta } = useCommonMeta();
+
+const lastUpdated = '08/02/2025'
+const email = 'contact@justbookme.ai'
+const website = 'www.justbookme.ai'
+const companyInfo = '9629033 Canada INC DBA JustBookMe.AI\nAryan: 1000 Innovation Dr Suite 500\nKanata, ON K2K 3E7\nCanada'
 
 onMounted(() => {
   // Set the meta tags for the refund policy page
   setPageMeta(
     'Refund Policy', 
-    'Learn about JustBookMe refund policy. We outline our refund eligibility criteria, process, and timelines to ensure transparency in all our transactions.'
+    'Refund policy for JustBookMe services. Learn about our return and refund conditions, eligibility, and process.'
   );
   
-  // Scroll to top when the page loads
+  // Scroll to top when component is mounted
   window.scrollTo({
     top: 0,
-    behavior: 'instant'
-  });
-});
+    behavior: 'smooth'
+  })
+})
+
+// Add counter reset for consistent styling with other policy pages
+const sections = [
+  'Eligibility for Refunds',
+  'Refund Period',
+  'Non-Refundable Cases',
+  'Refund Process',
+  'Contact Us'
+]
 </script>
 
 <template>
   <main class="dark:bg-black bg-white">
     <Navbar />
-    <!-- Hero Section -->
-    <div class="relative isolate">
-      <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-48 lg:px-24 text-center" v-fade="{ duration: 800 }">
-        <h1 class="text-3xl font-bold tracking-tight dark:text-white text-black sm:text-5xl">
-          Refund Policy
-        </h1>
-        <p class="mt-6 text-base sm:text-xl dark:text-gray-200 text-gray-700">
-          We strive to provide the best service possible. If you're not satisfied, please read our refund policy to understand how we handle refund requests.
-        </p>
-      </div>
-    </div>
+    <div class="relative">
+      <div class="relative z-10">
+        <div class="container mx-auto px-4 relative z-10 py-12 md:py-40">
+          <div class="prose dark:prose-invert max-w-4xl mx-auto [counter-reset:section_counter]">
+            <h1 class="text-2xl md:text-4xl font-medium mb-4 md:mb-6 text-center dark:text-white text-black">Return & Refund Policy</h1>
+            <p class="text-xs md:text-sm mb-6 md:mb-8 text-center dark:text-gray-300 text-gray-700">Last updated: {{ lastUpdated }}</p>
+            <p class="text-sm md:text-base mb-6 md:mb-8 dark:text-gray-200 text-gray-800">Thank you for choosing JustBookMe.AI. The following terms are applicable for any services that you have purchased from us.</p>
 
-    <!-- Refund Policy Content Section -->
-    <div class="dark:bg-black bg-gray-50 py-8 sm:py-16">
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-24">
-        <!-- Eligibility for Refund -->
-        <div class="dark:bg-zinc-900 bg-white p-4 sm:p-8 rounded-lg shadow-lg">
-          <h2 class="text-2xl sm:text-3xl font-semibold dark:text-white text-black text-center mb-4 sm:mb-6">Eligibility for Refund</h2>
-          <p class="dark:text-gray-300 text-gray-600 mb-4">
-            Refunds are applicable under the following circumstances:
-          </p>
-          <ul class="dark:text-gray-300 text-gray-600 space-y-2 list-disc pl-5">
-            <li>Service not delivered as promised within the agreed timeframe.</li>
-            <li>Technical issues caused by our system that result in failed deliverables.</li>
-            <li>Duplicate payments or other billing errors.</li>
-          </ul>
-        </div>
+            <section class="mb-6 md:mb-8">
+              <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
+                {{ sections[0] }}
+              </h2>
+              <p class="mb-4 dark:text-gray-200 text-gray-800">We offer refunds under the following circumstances:</p>
+              <ul class="list-disc pl-6 space-y-2 mb-4 dark:text-gray-200 text-gray-800">
+                <li>If the service is not delivered as promised due to an error on our end.</li>
+                <li>If a technical issue caused by our platform prevents you from accessing the features you paid for, and the issue cannot be resolved within a reasonable timeframe.</li>
+                <li>If you cancel your subscription within the refund period outlined below.</li>
+              </ul>
+            </section>
 
-        <!-- Non-Refundable Cases -->
-        <div class="dark:bg-zinc-900 bg-white p-4 sm:p-8 rounded-lg shadow-lg mt-4 sm:mt-8">
-          <h2 class="text-2xl sm:text-3xl font-semibold dark:text-white text-black text-center mb-4 sm:mb-6">Non-Refundable Cases</h2>
-          <p class="dark:text-gray-300 text-gray-600 mb-4">
-            Refunds will not be provided in the following cases:
-          </p>
-          <ul class="dark:text-gray-300 text-gray-600 space-y-2 list-disc pl-5">
-            <li>Change of mind after service initiation.</li>
-            <li>Failure to utilize services due to customer-related issues.</li>
-            <li>Violation of our terms and conditions.</li>
-          </ul>
-        </div>
+            <section class="mb-6 md:mb-8">
+              <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
+                {{ sections[1] }}
+              </h2>
+              <p class="dark:text-gray-200 text-gray-800">Refund requests must be made within 5 days of the payment date. Requests made after this period will not be eligible for a refund.</p>
+            </section>
 
-        <!-- Refund Request Process -->
-        <div class="dark:bg-zinc-900 bg-white p-4 sm:p-8 rounded-lg shadow-lg mt-4 sm:mt-8">
-          <h2 class="text-2xl sm:text-3xl font-semibold dark:text-white text-black text-center mb-4 sm:mb-6">Refund Request Process</h2>
-          <p class="dark:text-gray-300 text-gray-600 mb-4">
-            To request a refund, follow these steps:
-          </p>
-          <ul class="dark:text-gray-300 text-gray-600 space-y-2 list-disc pl-5">
-            <li>Visit our <router-link to="/contact" class="text-blue-500 underline">contact page</router-link> to submit your request.</li>
-            <li>Provide a detailed explanation of your issue, including any supporting evidence.</li>
-            <li>Our team will review your request and respond within 7 business days.</li>
-          </ul>
-        </div>
+            <section class="mb-6 md:mb-8">
+              <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
+                {{ sections[2] }}
+              </h2>
+              <p class="mb-4 dark:text-gray-200 text-gray-800">Refunds will not be granted under the following conditions:</p>
+              <ul class="list-disc pl-6 space-y-2 mb-4 dark:text-gray-200 text-gray-800">
+                <li>If you change your mind after purchasing a subscription or service.</li>
+                <li>If you fail to use the service during the subscription period.</li>
+                <li>If the issue is caused by third-party software or tools not affiliated with our platform.</li>
+              </ul>
+            </section>
 
-        <!-- Refund Timelines -->
-        <div class="dark:bg-zinc-900 bg-white p-4 sm:p-8 rounded-lg shadow-lg mt-4 sm:mt-8">
-          <h2 class="text-2xl sm:text-3xl font-semibold dark:text-white text-black text-center mb-4 sm:mb-6">Refund Timelines</h2>
-          <p class="dark:text-gray-300 text-gray-600">
-            Approved refunds will be processed within 10 business days. The amount will be credited to your original payment method.
-          </p>
-        </div>
+            <section class="mb-6 md:mb-8">
+              <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
+                {{ sections[3] }}
+              </h2>
+              <p class="mb-4 dark:text-gray-200 text-gray-800">To request a refund, please follow these steps:</p>
+              <ol class="list-decimal pl-6 space-y-2 mb-4 dark:text-gray-200 text-gray-800">
+                <li>Contact our support team at <a href="mailto:{{ email }}" class="text-primary hover:text-primary/80">{{ email }}</a></li>
+                <li>Provide your payment receipt, order ID, and a detailed explanation of the issue.</li>
+                <li>Our team will review your request and respond within 3-5 business days.</li>
+                <li>If your request is approved, the refund will be processed to your original payment method within 7-10 business days.</li>
+              </ol>
+            </section>
 
-        <!-- Contact Support -->
-        <div class="dark:bg-zinc-900 bg-white p-4 sm:p-8 rounded-lg shadow-lg mt-4 sm:mt-8">
-          <h2 class="text-2xl sm:text-3xl font-semibold dark:text-white text-black text-center mb-4 sm:mb-6">Need Help?</h2>
-          <p class="dark:text-gray-300 text-gray-600">
-            If you have any questions about our refund policy, please visit our <router-link to="/contact" class="text-blue-500 underline">contact page</router-link> for assistance.
-          </p>
+            <section class="mb-6 md:mb-8">
+              <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
+                {{ sections[4] }}
+              </h2>
+              <p class="dark:text-gray-200 text-gray-800 mb-4">If you have any questions about this Refund Policy, You can contact us:</p>
+
+              <ul class="text-sm md:text-base list-disc pl-6 space-y-2 dark:text-gray-200 text-gray-800">
+                <li>By visiting our website: <a href="https://{{ website }}" class="text-primary hover:text-primary/80">{{ website }}</a></li>
+                <li>By sending us an email: <a href="mailto:{{ email }}" class="text-primary hover:text-primary/80">{{ email }}</a></li>
+                <li>By mail: <pre class="text-sm whitespace-pre-line">{{ companyInfo }}</pre></li>
+              </ul>
+            </section>
+          </div>
         </div>
       </div>
     </div>
@@ -101,47 +112,56 @@ onMounted(() => {
 </template>
 
 <style lang="postcss">
-/* Apply the same theme styling as the privacy policy */
-:global(body) {
-  @apply dark:bg-black bg-white;
-}
+  :global(body) {
+    @apply dark:bg-black bg-white;
+  }
 
-h1, h2 {
-  @apply tracking-tight;
-}
+  h1, h2 {
+    @apply tracking-tight dark:text-white text-black;
+  }
 
-ul {
-  @apply list-disc pl-5 dark:text-gray-300 text-gray-600;
-}
+  h3 {
+    @apply dark:text-gray-100 text-gray-900;
+  }
 
-.bg-zinc-900 {
-  @apply dark:bg-[#111111] bg-white;
-}
+  p {
+    @apply dark:text-gray-200 text-gray-800;
+  }
 
-.p-8 {
-  padding: 2rem;
-}
-
-.rounded-lg {
-  border-radius: 0.5rem;
-}
-
-.shadow-lg {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-@media (max-width: 640px) {
-  .text-gray-600, .dark\:text-gray-300 {
-    font-size: 0.9375rem;
-    line-height: 1.6;
+  ul, ol {
+    @apply dark:text-gray-200 text-gray-800;
   }
 
   ul {
-    padding-left: 1.25rem;
+    @apply list-disc pl-5;
   }
 
-  .shadow-lg {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  ol {
+    @apply list-decimal pl-5;
   }
-}
-</style>
+
+  /* Fix for text color in dark/light mode */
+  .prose {
+    @apply dark:text-gray-200 text-gray-800;
+  }
+
+  /* Ensure section numbers are visible */
+  .before\:text-primary {
+    @apply before:dark:text-white before:text-black;
+  }
+
+  /* Ensure links are visible */
+  a {
+    @apply dark:text-blue-400 text-blue-600 hover:underline;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.8s ease;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+</style> 
