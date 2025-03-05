@@ -44,15 +44,15 @@ const sections = [
 </script>
 
 <template>
-  <main class="dark:bg-black bg-white">
+  <main class="bg-white">
     <Navbar />
     <div class="relative">
       <div class="relative z-10">
         <div class="container mx-auto px-4 relative z-10 py-12 md:py-40">
-          <div class="prose dark:prose-invert max-w-4xl mx-auto [counter-reset:section_counter]">
-            <h1 class="text-2xl md:text-4xl font-medium mb-4 md:mb-6 text-center dark:text-white text-black">Terms and Conditions</h1>
-            <p class="text-xs md:text-sm mb-6 md:mb-8 text-center dark:text-gray-300 text-gray-700">Last updated: {{ lastUpdated }}</p>
-            <p class="text-sm md:text-base mb-6 md:mb-8 dark:text-gray-200 text-gray-800">Please read these terms and conditions carefully before using Our Service.</p>
+          <div class="prose max-w-4xl mx-auto [counter-reset:section_counter]">
+            <h1 class="text-2xl md:text-4xl font-medium mb-4 md:mb-6 text-center text-black">Terms and Conditions</h1>
+            <p class="text-xs md:text-sm mb-6 md:mb-8 text-center">Last updated: {{ lastUpdated }}</p>
+            <p class="text-sm md:text-base mb-6 md:mb-8">Please read these terms and conditions carefully before using Our Service.</p>
 
             <section class="mb-6 md:mb-8">
               <h2 class="text-lg md:text-xl font-medium mb-3 md:mb-4 flex items-center gap-2 md:gap-3 before:[counter-increment:section_counter] before:content-[counter(section_counter)] before:bg-primary/10 before:w-6 md:before:w-8 before:h-6 md:before:h-8 before:rounded-full before:flex before:items-center before:justify-center before:text-primary before:text-sm md:before:text-base">
@@ -178,7 +178,7 @@ const sections = [
               <ul class="text-sm md:text-base list-disc pl-6 space-y-2">
                 <li>By visiting our website: <a href="https://{{ website }}" class="text-primary hover:text-primary/80">{{ website }}</a></li>
                 <li>By sending us an email: <a href="mailto:{{ email }}" class="text-primary hover:text-primary/80">{{ email }}</a></li>
-                <li>By mail: <pre class="text-sm whitespace-pre-line">{{ companyInfo }}</pre></li>
+                <li>By mail: <span class="text-sm whitespace-pre-line">{{ companyInfo }}</span></li>
               </ul>
             </section>
                 </div>
@@ -191,38 +191,38 @@ const sections = [
 
 <style lang="postcss">
     :global(body) {
-        @apply dark:bg-black bg-white;
+        @apply bg-white;
     }
 
     h1, h2 {
-    @apply tracking-tight dark:text-white text-black;
+    @apply tracking-tight text-black;
   }
 
   h3 {
-    @apply dark:text-gray-100 text-gray-900;
+    @apply text-gray-900;
   }
 
   p {
-    @apply dark:text-gray-200 text-gray-800;
+    @apply text-gray-800;
   }
 
   ul {
-    @apply list-disc pl-5 dark:text-gray-200 text-gray-800;
+    @apply list-disc pl-5 text-gray-800;
   }
 
-  /* Fix for text color in dark/light mode */
+  /* Fix for text color */
   .prose {
-    @apply dark:text-gray-200 text-gray-800;
+    @apply text-gray-800 font-normal;
   }
 
   /* Ensure section numbers are visible */
   .before\:text-primary {
-    @apply before:dark:text-white before:text-black;
+    @apply before:text-gray-800 before:bg-transparent;
   }
 
   /* Ensure links are visible */
   a {
-    @apply dark:text-blue-400 text-blue-600 hover:underline;
+    @apply text-blue-600 hover:underline;
     }
 
     .fade-enter-active,
