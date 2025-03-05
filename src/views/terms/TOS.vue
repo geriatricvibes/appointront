@@ -10,7 +10,7 @@ const { setPageMeta } = useCommonMeta();
 const lastUpdated = '08/02/2025'
 const email = 'contact@justbookme.ai'
 const website = 'www.justbookme.ai'
-const companyInfo = '9629033 Canada INC DBA JustBookMe.AI\nAryan: 1000 Innovation Dr Suite 500\nKanata, ON K2K 3E7\nCanada'
+const companyInfo = '9629033 Canada INC DBA JustBookMe.AI\n1000 Innovation Dr Suite 500\nKanata, ON K2K 3E7\nCanada'
 
 onMounted(() => {
   // Set the meta tags for the terms of service page
