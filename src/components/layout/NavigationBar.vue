@@ -13,16 +13,17 @@
 
       <!-- Main Navigation - Desktop -->
       <div class="hidden md:flex items-center gap-2 flex-1 justify-center">
-        <RouterLink 
+        <a 
           v-for="item in navigationItems" 
-          :key="item.path"
-          :to="item.path"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-          :class="{ 'bg-accent text-accent-foreground': isCurrentRoute(item.path) }"
+          :key="item.name"
+          href="#"
+          @click.prevent="handleNavItemClick(item)"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer"
+          :class="{ 'bg-accent text-accent-foreground': !item.action && isCurrentRoute(item.path) }"
         >
           <component :is="item.icon" class="h-4 w-4" />
           <span>{{ item.name }}</span>
-        </RouterLink>
+        </a>
       </div>
 
       <!-- User Profile Section -->
@@ -78,17 +79,17 @@
 
     <!-- Mobile Navigation Menu -->
     <div v-if="isMobileMenuOpen" class="md:hidden px-4 py-2 bg-background border-t">
-      <RouterLink 
+      <a 
         v-for="item in navigationItems" 
-        :key="item.path"
-        :to="item.path"
-        class="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-        :class="{ 'bg-accent text-accent-foreground': isCurrentRoute(item.path) }"
-        @click="isMobileMenuOpen = false"
+        :key="item.name"
+        href="#"
+        @click.prevent="handleNavItemClick(item)"
+        class="flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer"
+        :class="{ 'bg-accent text-accent-foreground': !item.action && isCurrentRoute(item.path) }"
       >
         <component :is="item.icon" class="h-5 w-5" />
         <span>{{ item.name }}</span>
-      </RouterLink>
+      </a>
     </div>
   </header>
 </template>
@@ -107,14 +108,35 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/composables/useAuth'
 import { useRouter, useRoute } from 'vue-router'
+import { useTutorial } from '@/composables/useTutorial'
+
+// Define navigation item type
+interface NavigationItem {
+  name: string;
+  path: string;
+  icon: any;
+  action?: () => void;
+}
 
 const router = useRouter()
 const route = useRoute()
 const { user, signOut } = useAuth()
+const { startTutorial } = useTutorial()
 
-const navigationItems = [
+// Define a direct function to start the tutorial
+const handleStartTutorial = () => {
+  console.log('Navigation: Starting tutorial')
+  startTutorial()
+}
+
+const navigationItems: NavigationItem[] = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { name: 'Tutorials', path: '/tutorial', icon: HelpCircle }
+  { 
+    name: 'Tutorials', 
+    path: '#', 
+    icon: HelpCircle,
+    action: handleStartTutorial
+  }
 ]
 
 const getUserInitial = computed(() => 
@@ -133,4 +155,15 @@ const handleSignOut = async () => {
 }
 
 const isMobileMenuOpen = ref(false)
+
+// Handle navigation item click
+const handleNavItemClick = (item: NavigationItem) => {
+  console.log('Navigation item clicked:', item.name)
+  if (item.action) {
+    item.action()
+  } else if (item.path) {
+    router.push(item.path)
+  }
+  isMobileMenuOpen.value = false
+}
 </script>

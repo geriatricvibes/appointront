@@ -59,7 +59,7 @@ const widgetCode = computed(() => `<!-- Add Chat Widget CSS -->
   window.addEventListener('load', function() {
     if (window.ChatWidget && typeof window.ChatWidget.initChatWidget === 'function') {
       window.ChatWidget.initChatWidget({
-        apiKey: "${apiKey.value}",
+        apiKey: "your-api-key-here",
         apiUrl: "${baseUrl}"
       });
     } else {

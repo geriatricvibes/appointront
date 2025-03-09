@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useTutorial } from '@/composables/useTutorial'
 import { Button } from '@/components/ui/button'
 import { ChevronRight, ChevronLeft, X, HelpCircle } from 'lucide-vue-next'
@@ -32,11 +32,17 @@ const calculatePosition = async () => {
   await nextTick()
   
   const targetElement = document.querySelector(currentStep.value.targetSelector)
-  if (!targetElement) return
+  if (!targetElement) {
+    console.error(`Target element not found: ${currentStep.value.targetSelector}`)
+    return
+  }
   
   const targetRect = targetElement.getBoundingClientRect()
   const tooltipElement = document.querySelector('.tutorial-tooltip') as HTMLElement
-  if (!tooltipElement) return
+  if (!tooltipElement) {
+    console.error('Tooltip element not found')
+    return
+  }
   
   const tooltipRect = tooltipElement.getBoundingClientRect()
   
@@ -180,7 +186,8 @@ const removeHighlights = () => {
 }
 
 // Watch for changes in the current step and recalculate position
-watch(currentStep, async () => {
+watch(currentStep, async (newValue) => {
+  console.log('Current step changed:', newValue)
   // Set transitioning flag to true for animation
   isTransitioning.value = true
   
@@ -200,6 +207,7 @@ watch(currentStep, async () => {
 
 // Watch for tutorial active state
 watch(isTutorialActive, async (newValue) => {
+  console.log('Tutorial active state changed:', newValue)
   if (!newValue) {
     isTransitioning.value = true
     setTimeout(() => {
@@ -228,6 +236,7 @@ const handleResize = () => {
 }
 
 onMounted(() => {
+  console.log('TutorialOverlay mounted, isTutorialActive:', isTutorialActive.value)
   window.addEventListener('resize', handleResize)
   
   // If user hasn't seen tutorial, show it automatically after a short delay
@@ -236,6 +245,10 @@ onMounted(() => {
       startTutorial()
     }, 1000)
   }
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
 })
 </script>
 

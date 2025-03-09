@@ -38,11 +38,12 @@ const dashboardSteps: TutorialStep[] = [
   }
 ]
 
-export function useTutorial() {
-  const isTutorialActive = ref(false)
-  const currentStepIndex = ref(0)
-  const hasSeenTutorial = ref(localStorage.getItem('hasSeenTutorial') === 'true')
+// Create shared state that persists between component instances
+const isTutorialActive = ref(false)
+const currentStepIndex = ref(0)
+const hasSeenTutorial = ref(localStorage.getItem('hasSeenTutorial') === 'true')
 
+export function useTutorial() {
   // Get the current step
   const currentStep = computed(() => 
     isTutorialActive.value ? dashboardSteps[currentStepIndex.value] : null
@@ -60,6 +61,7 @@ export function useTutorial() {
 
   // Start the tutorial
   const startTutorial = () => {
+    console.log('Starting tutorial')
     isTutorialActive.value = true
     currentStepIndex.value = 0
   }
