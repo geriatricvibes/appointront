@@ -95,7 +95,6 @@ onUnmounted(() => {
     <header class="h-[100dvh] relative overflow-hidden flex items-center justify-center">
       <ParticleBackground class="absolute inset-0" />
       <div class="relative z-20 h-full w-full flex flex-col">
-        <Navbar />
         <Hero class="flex-1 flex items-center justify-center" @get-started="handleGetStarted" />
       </div>
     </header>
@@ -119,7 +118,6 @@ onUnmounted(() => {
       <section aria-label="Frequently Asked Questions" class="scroll-mt-16">
         <FAQ />
       </section>
-      <Footer />
     </div>
   </ScrollArea>
 </template>

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useCommonMeta } from '@/composables/useCommonMeta'
-import Navbar from '@/components/layout/Navbar.vue'
-import Footer from '@/components/layout/Footer.vue'
 
 // Get the setPageMeta function from our composable
 const { setPageMeta } = useCommonMeta();
@@ -44,13 +42,12 @@ const sections = [
 </script>
 
 <template>
-  <main class="bg-white">
-    <Navbar />
+  <main class="bg-background policy-page">
     <div class="relative">
       <div class="relative z-10">
         <div class="container mx-auto px-4 relative z-10 py-12 md:py-40">
           <div class="prose max-w-4xl mx-auto [counter-reset:section_counter]">
-            <h1 class="text-2xl md:text-4xl font-medium mb-4 md:mb-6 text-center text-black">Terms and Conditions</h1>
+            <h1 class="text-2xl md:text-4xl font-medium mb-4 md:mb-6 text-center text-foreground">Terms and Conditions</h1>
             <p class="text-xs md:text-sm mb-6 md:mb-8 text-center">Last updated: {{ lastUpdated }}</p>
             <p class="text-sm md:text-base mb-6 md:mb-8">Please read these terms and conditions carefully before using Our Service.</p>
 
@@ -185,55 +182,7 @@ const sections = [
             </div>
         </div>
     </div>
-    <Footer />
   </main>
 </template>
-
-<style lang="postcss">
-    :global(body) {
-        @apply bg-white;
-    }
-
-    h1, h2 {
-    @apply tracking-tight text-black;
-  }
-
-  h3 {
-    @apply text-gray-900;
-  }
-
-  p {
-    @apply text-gray-800;
-  }
-
-  ul {
-    @apply list-disc pl-5 text-gray-800;
-  }
-
-  /* Fix for text color */
-  .prose {
-    @apply text-gray-800 font-normal;
-  }
-
-  /* Ensure section numbers are visible */
-  .before\:text-primary {
-    @apply before:text-gray-800 before:bg-transparent;
-  }
-
-  /* Ensure links are visible */
-  a {
-    @apply text-blue-600 hover:underline;
-    }
-
-    .fade-enter-active,
-    .fade-leave-active {
-        transition: opacity 0.8s ease;
-    }
-
-    .fade-enter-from,
-    .fade-leave-to {
-        opacity: 0;
-    }
-</style>
 
 

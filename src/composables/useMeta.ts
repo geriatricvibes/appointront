@@ -1,4 +1,3 @@
-import { useRoute } from 'vue-router'
 
 interface MetaTag {
   property?: string;

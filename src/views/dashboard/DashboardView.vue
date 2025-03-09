@@ -11,6 +11,7 @@ import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { chatApi } from '@/api/chat'
 import { Button } from '@/components/ui/button'
+import { TutorialOverlay } from '@/components/ui/tutorial'
 
 const { user } = useAuth()
 const isLoading = ref(false)
@@ -185,7 +186,7 @@ onMounted(() => {
       <div v-if="user" class="space-y-4">
         <div class="space-y-4">
           <!-- Calendly Card -->
-          <div class="rounded-lg bg-card p-3 md:p-4 shadow-sm border border-border/50">
+          <div class="rounded-lg bg-card p-3 md:p-4 shadow-sm border border-border/50" data-tutorial="calendly-connection">
             <div class="flex items-center justify-between flex-wrap gap-2">
               <div class="flex items-center gap-2">
                 <img src="@/assets/calendly.png" alt="Calendly" class="h-5 w-5" />
@@ -221,7 +222,7 @@ onMounted(() => {
           </div>
 
           <!-- Knowledge Sources Card -->
-          <div class="rounded-lg bg-card p-3 md:p-4 shadow-sm border border-border/50">
+          <div class="rounded-lg bg-card p-3 md:p-4 shadow-sm border border-border/50" data-tutorial="knowledge-sources">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
               <div class="flex items-center gap-2">
                 <BookOpen class="h-5 w-5 text-primary" />
@@ -274,7 +275,7 @@ onMounted(() => {
           </div>
 
           <!-- Widget Integration Card -->
-          <div class="rounded-lg border bg-card p-4 md:p-6">
+          <div class="rounded-lg border bg-card p-4 md:p-6" data-tutorial="widget-integration">
             <div class="flex items-center justify-between mb-4 md:mb-6 flex-wrap gap-2">
               <div>
                 <h3 class="text-base md:text-lg font-semibold">Widget Integration</h3>
@@ -358,6 +359,9 @@ onMounted(() => {
         </div>
       </div>
     </main>
+
+    <!-- Tutorial Overlay -->
+    <TutorialOverlay />
 
     <Dialog :open="showAddSourceDialog" @update:open="showAddSourceDialog = false">
       <DialogContent>

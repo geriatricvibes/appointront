@@ -95,7 +95,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { User, Settings, LogOut, LayoutDashboard, HelpCircle, ChevronsUpDown, Menu, X } from 'lucide-vue-next'
+import { User, Settings, LogOut, LayoutDashboard, ChevronsUpDown, Menu, X } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import {
@@ -113,8 +113,7 @@ const route = useRoute()
 const { user, signOut } = useAuth()
 
 const navigationItems = [
-  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { name: 'Help', path: '/help', icon: HelpCircle }
+  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard }
 ]
 
 const getUserInitial = computed(() => 
