@@ -226,7 +226,7 @@ onMounted(() => {
             <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
               <div class="flex items-center gap-2">
                 <BookOpen class="h-5 w-5 text-primary" />
-                <h3 class="font-medium text-sm md:text-base">Knowledge Sources</h3>
+                <h3 class="font-medium text-sm md:text-base">Business Knowledge</h3>
               </div>
               <button
                 @click="showAddSourceDialog = true"

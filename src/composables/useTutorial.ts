@@ -30,8 +30,8 @@ const dashboardSteps: TutorialStep[] = [
   },
   {
     id: 'knowledge-sources',
-    title: 'Add Knowledge Sources',
-    description: 'Enhance your chat bot with domain-specific knowledge by adding sources from websites or custom content.',
+    title: 'Add Business Knowledge',
+    description: 'Enhance your AI assistant with your business-specific knowledge by adding sources from websites or custom content.',
     targetSelector: '[data-tutorial="knowledge-sources"]',
     position: 'bottom',
     order: 3
