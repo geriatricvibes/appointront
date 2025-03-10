@@ -5,9 +5,17 @@
       <div class="grid grid-cols-1 gap-8 sm:grid-cols-2">
         <!-- Company Info -->
         <div class="space-y-4">
-          <div class="flex items-center gap-2">
-            <img src="/calendar-sync.png" alt="JustBookMe Logo" class="h-5 w-5 dark:invert" />
-            <h3 class="text-2xl font-semibold text-foreground">JustBookMe</h3>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <img src="/calendar-sync.png" alt="JustBookMe Logo" class="h-5 w-5 dark:invert" />
+              <h3 class="text-2xl font-semibold text-foreground">JustBookMe</h3>
+              <div class="flex items-center gap-1 ml-1">
+                <p class="text-sm text-muted-foreground">by</p>
+                <img src="/darkhard.png" alt="Hard Marketing Logo" class="hidden h-6 w-auto dark:block" />
+                <img src="/lighthard.png" alt="Hard Marketing Logo" class="h-6 w-auto block dark:hidden" />
+              </div>
+            </div>
+            <!-- Parent Brand -->
           </div>
           <p class="text-sm text-muted-foreground">
             Streamlining appointments and customer engagement through intelligent automation.
