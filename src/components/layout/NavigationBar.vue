@@ -55,19 +55,6 @@
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" class="w-56">
-            <DropdownMenuItem asChild>
-              <RouterLink to="/profile" class="flex items-center">
-                <User class="h-4 w-4 mr-2" />
-                Profile
-              </RouterLink>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <RouterLink to="/settings" class="flex items-center">
-                <Settings class="h-4 w-4 mr-2" />
-                Settings
-              </RouterLink>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem @click="handleSignOut">
               <LogOut class="h-4 w-4 mr-2" />
               Log out
@@ -96,15 +83,14 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { User, Settings, LogOut, LayoutDashboard, HelpCircle, ChevronsUpDown, Menu, X } from 'lucide-vue-next'
+import { LogOut, LayoutDashboard, HelpCircle, ChevronsUpDown, Menu, X } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator
+  DropdownMenuItem
 } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/composables/useAuth'
 import { useRouter, useRoute } from 'vue-router'

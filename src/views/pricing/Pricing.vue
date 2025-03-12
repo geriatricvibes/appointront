@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useCommonMeta } from '../../composables/useCommonMeta';
-import Navbar from '../../components/layout/Navbar.vue';
-import Footer from '../../components/layout/Footer.vue';
 import AuroraBackground from '../../components/home/AuroraBackground.vue';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -24,7 +22,6 @@ onMounted(() => {
 
 <template>
   <main class="overflow-x-hidden position-relative min-h-screen">
-    <Navbar />
     <!-- Hero Section -->
     <div class="relative isolate bg-background overflow-hidden">
       <AuroraBackground class="absolute inset-0 -z-10 opacity-100" />
@@ -81,12 +78,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
-    <div class="relative bg-background z-10">
-      <Footer />
-    </div>
   </main>
-  
 </template>
 
 <style scoped>
@@ -124,13 +116,6 @@ onMounted(() => {
 .group:hover li:nth-child(1) { animation-delay: 0.1s; }
 .group:hover li:nth-child(2) { animation-delay: 0.2s; }
 .group:hover li:nth-child(3) { animation-delay: 0.3s; }
-
-/* Update footer styles */
-:deep(.footer) {
-  position: relative;
-  z-index: 20;
-  background-color: rgb(var(--background));
-}
 
 :deep(.aurora-background) {
   opacity: 1;

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useCommonMeta } from '../../composables/useCommonMeta';
-import Navbar from '../../components/layout/Navbar.vue';
-import Footer from '../../components/layout/Footer.vue';
 import AuroraBackground from '../../components/home/AuroraBackground.vue';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 // import { Badge } from '@/components/ui/badge';
@@ -53,7 +51,6 @@ onMounted(() => {
 
 <template>
   <main>
-    <Navbar />
     <!-- Hero Section -->
     <div class="relative isolate bg-background overflow-hidden">
       <AuroraBackground class="absolute inset-0 -z-10 opacity-100" />

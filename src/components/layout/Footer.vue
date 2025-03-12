@@ -10,7 +10,7 @@
               <img src="/calendar-sync.png" alt="JustBookMe Logo" class="h-5 w-5 dark:invert" />
               <h3 class="text-2xl font-semibold text-foreground">JustBookMe</h3>
               <div class="flex items-center gap-1 ml-1">
-                <p class="text-sm text-muted-foreground">by</p>
+                <p class="text-xs text-muted-foreground">by</p>
                 <img src="/darkhard.png" alt="Hard Marketing Logo" class="hidden h-6 w-auto dark:block" />
                 <img src="/lighthard.png" alt="Hard Marketing Logo" class="h-6 w-auto block dark:hidden" />
               </div>
@@ -43,7 +43,7 @@
               size="icon" 
               class="hover:text-foreground text-muted-foreground"
               as="a"
-              href="https://www.facebook.com/profile.php?id=61572205844944"
+              href="https://www.facebook.com/share/18yu9kT7qt/?mibextid=wwXIfr"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -54,7 +54,7 @@
               size="icon" 
               class="hover:text-foreground text-muted-foreground"
               as="a"
-              href="https://www.instagram.com/geriatric_writers/?hl=en"
+              href="https://www.instagram.com/hard_marketing03?igsh=MTU5Z3lxbnloZWFseg%3D%3D"
               target="_blank"
               rel="noopener noreferrer"
             >

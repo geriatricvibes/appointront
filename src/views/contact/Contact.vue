@@ -1,7 +1,5 @@
 <template>
   <div class="relative min-h-screen">
-    <Navbar />
-    
     <!-- Hero Section with AuroraBackground -->
     <div class="relative isolate bg-background overflow-hidden">
       <AuroraBackground class="absolute inset-0 -z-10 opacity-100" />
@@ -24,7 +22,47 @@
       <!-- Contact Methods Section -->
       <div class="relative bg-background">
         <div class="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-6 sm:py-16">
-          <div class="flex justify-center">
+          <div class="flex flex-col items-center space-y-8">
+            <!-- Social Media Links -->
+            <div class="text-center space-y-4">
+              <h3 class="text-xl font-semibold">Connect With Us</h3>
+              <div class="flex justify-center space-x-4">
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  class="hover:bg-primary/10"
+                  as="a"
+                  href="https://www.facebook.com/share/18yu9kT7qt/?mibextid=wwXIfr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FacebookIcon class="h-5 w-5" />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  class="hover:bg-primary/10"
+                  as="a"
+                  href="https://www.instagram.com/hard_marketing03?igsh=MTU5Z3lxbnloZWFseg%3D%3D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <InstagramIcon class="h-5 w-5" />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  class="hover:bg-primary/10"
+                  as="a"
+                  href="https://x.com/geriatricwriter"  
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <TwitterIcon class="h-5 w-5" />
+                </Button>
+              </div>
+            </div>
+            
             <!-- Email Card -->
             <Card class="group relative overflow-hidden transition-all hover:shadow-lg max-w-md w-full">
               <CardContent class="p-6">
@@ -56,27 +94,22 @@
         </div>
       </div>
     </main>
-
-    <!-- Footer Section -->
-    <div class="relative mt-auto">
-      <div class="absolute inset-0 bg-background"></div>
-      <Footer class="relative" />
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useCommonMeta } from '../../composables/useCommonMeta'
-import Navbar from '@/components/layout/Navbar.vue'
-import Footer from '@/components/layout/Footer.vue'
 import HyperText from '@/components/ui/hyper/HyperText.vue'
 import AuroraBackground from '@/components/home/AuroraBackground.vue'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { 
   Mail as MailIcon, 
-  ExternalLink as ExternalLinkIcon
+  ExternalLink as ExternalLinkIcon,
+  Facebook as FacebookIcon,
+  Instagram as InstagramIcon,
+  Twitter as TwitterIcon
 } from 'lucide-vue-next'
 
 // Get the setPageMeta function from our composable
