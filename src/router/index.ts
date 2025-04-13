@@ -11,19 +11,22 @@ import TOSView from '@/views/terms/TOS.vue'
 import RefundView from '@/views/refund/Refund.vue'
 import ContactView from '@/views/contact/Contact.vue'
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes: [
+// Get the current hostname
+const hostname = window.location.hostname
+
+// Determine if we're on the app subdomain
+const isAppSubdomain = hostname.startsWith('app.') || 
+                       hostname === 'localhost' || 
+                       hostname.includes('127.0.0.1')
+
+// Create routes based on domain
+const routes = [
+  // Routes available on the app subdomain
+  ...(isAppSubdomain ? [
     {
       path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/auth',
       name: 'auth',
       component: AuthView,
-
     },
     {
       path: '/auth/callback',
@@ -39,6 +42,13 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: DashboardView,
+    }
+  ] : [
+    // Routes available on the main/landing domain
+    {
+      path: '/',
+      name: 'home',
+      component: HomeView
     },
     {
       path: '/about',
@@ -70,7 +80,12 @@ const router = createRouter({
       name: 'contact',
       component: ContactView
     }
-  ]
+  ])
+]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes
 })
 
 export default router 

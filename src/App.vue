@@ -4,23 +4,23 @@ import { computed } from 'vue'
 import Navbar from '@/components/layout/Navbar.vue'
 import Footer from '@/components/layout/Footer.vue'
 
-// Determine if the current route is a dashboard route
+// Determine if the current route is a dashboard or auth route
 const route = useRoute()
-const isDashboardRoute = computed(() => {
-  return route.path.includes('/dashboard')
+const hideNavAndFooter = computed(() => {
+  return route.path.includes('/dashboard') || route.path.includes('/auth')
 })
 </script>
 
 <template>
   <div class="app-container">
-    <!-- Show Navbar for all routes except dashboard routes -->
-    <Navbar v-if="!isDashboardRoute" />
+    <!-- Show Navbar for all routes except dashboard and auth routes -->
+    <Navbar v-if="!hideNavAndFooter" />
     
     <!-- Main content -->
     <RouterView />
     
-    <!-- Show Footer for all routes except dashboard routes -->
-    <Footer v-if="!isDashboardRoute" />
+    <!-- Show Footer for all routes except dashboard and auth routes -->
+    <Footer v-if="!hideNavAndFooter" />
   </div>
 </template>
 

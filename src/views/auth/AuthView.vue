@@ -2,6 +2,19 @@
 import LoginButton from '@/components/auth/LoginButton.vue'
 import Smoke from '@/components/auth/Smoke.vue'
 import WelcomeMessage from '@/components/auth/WelcomeMessage.vue'
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+// If user is already logged in, redirect to dashboard
+onMounted(() => {
+  // Check for authentication - replace with your auth check logic
+  const isAuthenticated = localStorage.getItem('auth_token')
+  if (isAuthenticated) {
+    router.push('/dashboard')
+  }
+})
 </script>
 
 <template>
