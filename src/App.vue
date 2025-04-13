@@ -14,8 +14,8 @@ const hideNavAndFooter = computed(() => {
 <template>
   <div class="app-container">
     <!-- Show Navbar for all routes except dashboard and auth routes -->
-    <Navbar v-if="!hideNavAndFooter" />
-    
+    <!-- <Navbar v-if="!hideNavAndFooter" />
+     -->
     <!-- Main content -->
     <RouterView />
     
