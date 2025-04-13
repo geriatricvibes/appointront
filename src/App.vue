@@ -19,8 +19,6 @@ const hideNavAndFooter = computed(() => {
     <!-- Main content -->
     <RouterView />
     
-    <!-- Show Footer for all routes except dashboard and auth routes -->
-    <Footer v-if="!hideNavAndFooter" />
   </div>
 </template>
 
