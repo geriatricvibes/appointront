@@ -1,14 +1,8 @@
 <script setup lang="ts">
-import { RouterView, useRoute } from 'vue-router'
-import { computed } from 'vue'
-import Navbar from '@/components/layout/Navbar.vue'
-import Footer from '@/components/layout/Footer.vue'
+import { RouterView } from 'vue-router'
 
 // Determine if the current route is a dashboard or auth route
-const route = useRoute()
-const hideNavAndFooter = computed(() => {
-  return route.path.includes('/dashboard') || route.path.includes('/auth')
-})
+
 </script>
 
 <template>

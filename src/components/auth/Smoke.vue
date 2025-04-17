@@ -28,7 +28,7 @@ function init() {
 
   renderer = new THREE.WebGLRenderer({ 
     alpha: true,
-    antialias: window.innerWidth > 768,
+    antialias: true,
     powerPreference: 'high-performance'
   })
   renderer.setClearColor(0x000000, 0)
@@ -42,55 +42,83 @@ function init() {
   camera.position.z = 1000
   scene.add(camera)
 
-  light = new THREE.DirectionalLight(0xffffff, 1.2)
+  // Enhanced lighting setup
+  light = new THREE.DirectionalLight(0xffffff, 1.5)
   light.position.set(-1, 1, 1)
   scene.add(light)
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6)
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.8)
   scene.add(ambientLight)
+
+  // Add subtle point lights for more dimension
+  const pointLight1 = new THREE.PointLight(0x3b82f6, 0.8, 1000)
+  pointLight1.position.set(300, 300, 200)
+  scene.add(pointLight1)
+
+  const pointLight2 = new THREE.PointLight(0x818cf8, 0.6, 1000)
+  pointLight2.position.set(-300, -200, 400)
+  scene.add(pointLight2)
 
   const smokeTexture = new THREE.TextureLoader().load('https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/Smoke-Element.png')
   smokeTexture.minFilter = THREE.LinearFilter
+  
+  // Create a more modern gradient color scheme
+  const isDark = isDarkMode()
+  const baseColor = isDark ? 0x2563eb : 0xdbeafe // Blue shades
+  const accentColor = isDark ? 0x7c3aed : 0xc7d2fe // Purple accent shades
+  
   const smokeMaterial = new THREE.MeshLambertMaterial({
-    color: new THREE.Color(`hsl(220, 70%, ${isDarkMode() ? '30%' : '80%'})`),
+    color: baseColor,
     map: smokeTexture,
     transparent: true,
-    opacity: isDarkMode() ? 0.4 : 0.2,
+    opacity: isDark ? 0.35 : 0.2,
     blending: THREE.AdditiveBlending,
     depthWrite: false
   })
 
-  const particleCount = window.innerWidth < 768 ? 40 : 75
-  const particleSize = window.innerWidth < 768 ? 200 : 300
+  // Determine particle count based on performance
+  const isMobile = window.innerWidth < 768
+  const isLowPerfDevice = window.navigator.hardwareConcurrency && window.navigator.hardwareConcurrency < 4
+  const particleCount = isMobile || isLowPerfDevice ? 35 : 70
+  const particleSize = isMobile ? 220 : 320
   const smokeGeo = new THREE.PlaneGeometry(particleSize, particleSize)
 
   for (let p = 0; p < particleCount; p++) {
     const particle = new THREE.Mesh(smokeGeo, smokeMaterial.clone())
-    const isDark = isDarkMode()
     
-    const hue = isDark 
-      ? 220 + Math.random() * 100  // Dark mode: blue to purple
-      : 200 + Math.random() * 40   // Light mode: light blue range
-    const saturation = isDark 
-      ? 0.8 + Math.random() * 0.2  // Dark mode: highly saturated
-      : 0.4 + Math.random() * 0.3  // Light mode: softer saturation
-    const lightness = isDark 
-      ? 0.2 + Math.random() * 0.2  // Dark mode: darker
-      : 0.85 + Math.random() * 0.1 // Light mode: very light
-
-    particle.material.color.setHSL(hue/360, saturation, lightness)
+    // Create a more subtle color variation for a modern look
+    const colorMix = Math.random()
+    const particleColor = new THREE.Color(baseColor)
+    particleColor.lerp(new THREE.Color(accentColor), colorMix * 0.7)
+    particle.material.color = particleColor
     
-    const radius = Math.random() * (window.innerWidth < 768 ? 600 : 800)
+    // Apply subtle random opacity variation
+    particle.material.opacity = (isDark ? 0.25 : 0.15) + (Math.random() * 0.2)
+    
+    // Position particles in a more deliberate pattern
+    const radius = 200 + Math.random() * (isMobile ? 600 : 900)
     const theta = Math.random() * Math.PI * 2
-    const phi = Math.random() * Math.PI
+    const phi = (Math.random() * 0.8 + 0.1) * Math.PI // More concentrated around horizontal plane
+    
     particle.position.set(
       radius * Math.sin(phi) * Math.cos(theta),
       radius * Math.sin(phi) * Math.sin(theta),
-      radius * Math.cos(phi)
+      radius * Math.cos(phi) - 300 // Push particles back a bit
     )
+    
     particle.rotation.z = Math.random() * Math.PI * 2
+    particle.scale.set(0.8 + Math.random() * 0.6, 0.8 + Math.random() * 0.6, 1)
+    
     scene.add(particle)
-    smokeParticles.push(particle)
+    smokeParticles.push({
+      mesh: particle,
+      speed: 0.2 + Math.random() * 0.3, // Variable speeds
+      direction: new THREE.Vector3(
+        (Math.random() - 0.5) * 0.1,
+        (Math.random() - 0.5) * 0.1,
+        0
+      )
+    })
   }
 
   document.getElementById('smoke-container').appendChild(renderer.domElement)
@@ -98,6 +126,7 @@ function init() {
 
 let frameCount = 0
 let lastTime = performance.now()
+let fpsThrottled = false
 
 function checkPerformance() {
   frameCount++
@@ -108,13 +137,16 @@ function checkPerformance() {
     frameCount = 0
     lastTime = currentTime
     
-    if (fps < 30 && smokeParticles.length > 20) {
-      const particlesToRemove = Math.min(10, smokeParticles.length - 20)
+    // Manage performance more aggressively
+    if (fps < 30 && !fpsThrottled && smokeParticles.length > 15) {
+      fpsThrottled = true
+      const particlesToRemove = Math.min(smokeParticles.length - 15, Math.ceil(smokeParticles.length * 0.3))
+      
       for (let i = 0; i < particlesToRemove; i++) {
         const particle = smokeParticles.pop()
-        scene.remove(particle)
-        particle.geometry.dispose()
-        particle.material.dispose()
+        scene.remove(particle.mesh)
+        particle.mesh.geometry.dispose()
+        particle.mesh.material.dispose()
       }
     }
   }
@@ -129,19 +161,36 @@ function animate() {
 }
 
 function evolveSmoke() {
-  let sp = smokeParticles.length
-  while (sp--) {
-    const particle = smokeParticles[sp]
-    const speedFactor = window.innerWidth < 768 ? 0.15 : 0.2
-    particle.rotation.z += (delta * speedFactor)
+  // More fluid and natural smoke movement
+  for (let i = 0; i < smokeParticles.length; i++) {
+    const particle = smokeParticles[i]
+    const mesh = particle.mesh
     
-    const movementSpeed = window.innerWidth < 768 ? 6 : 10
-    particle.position.y += delta * movementSpeed * (Math.cos(particle.position.x / 100))
-    particle.position.x += delta * movementSpeed * (Math.sin(particle.position.y / 100))
+    // Smoother rotation
+    mesh.rotation.z += delta * particle.speed * 0.3
     
-    const boundary = window.innerWidth < 768 ? 400 : 600
-    if (particle.position.y > boundary) particle.position.y = -boundary
-    if (particle.position.x > boundary) particle.position.x = -boundary
+    // More natural movement with sine wave patterns
+    const time = Date.now() * 0.001
+    const waveX = Math.sin(time * 0.3 + i * 0.1) * delta * 3
+    const waveY = Math.cos(time * 0.5 + i * 0.05) * delta * 3
+    
+    mesh.position.x += (particle.direction.x + waveX) * (mesh.position.y * 0.01)
+    mesh.position.y += (particle.direction.y + waveY) * (mesh.position.x * 0.01)
+    
+    // Subtle breathing effect with scale
+    const breatheFactor = 1 + Math.sin(time * 0.5 + i) * 0.02
+    mesh.scale.set(mesh.scale.x * breatheFactor, mesh.scale.y * breatheFactor, 1)
+    
+    // Boundary checks with smoother reset
+    const boundary = window.innerWidth < 768 ? 500 : 800
+    if (Math.abs(mesh.position.y) > boundary) {
+      mesh.position.y *= -0.95
+      particle.direction.y *= -0.5
+    }
+    if (Math.abs(mesh.position.x) > boundary) {
+      mesh.position.x *= -0.95
+      particle.direction.x *= -0.5
+    }
   }
 }
 
@@ -153,7 +202,7 @@ function onWindowResize() {
 </script>
 
 <template>
-  <div id="smoke-container" class="fixed inset-0 w-full h-full opacity-90 dark:opacity-70" />
+  <div id="smoke-container" class="fixed inset-0 w-full h-full opacity-95 dark:opacity-80 z-0" />
 </template>
 
 <style scoped>
