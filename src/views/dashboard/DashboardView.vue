@@ -5,15 +5,21 @@ import { dashboardApi } from '@/api/dashboard'
 import NavigationBar from '@/components/layout/NavigationBar.vue'
 import { PlusIcon, TrashIcon} from '@heroicons/vue/24/outline/index.js'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Loader2, BookOpen, FileText, Type, Link2, FileEdit, CheckCircle2, XCircle, Copy, CheckCheck, Key } from 'lucide-vue-next'
+import { Loader2, BookOpen, FileText, Type, Link2, FileEdit, CheckCircle2, XCircle, Copy, CheckCheck, Key, AlertTriangle } from 'lucide-vue-next'
 
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { chatApi } from '@/api/chat'
+import { subscriptionApi } from '@/api/subscription'
 import { Button } from '@/components/ui/button'
 import { TutorialOverlay } from '@/components/ui/tutorial'
+// @ts-ignore
+import { useToast } from '@/components/ui/toast/use-toast'
+// @ts-ignore 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 const { user } = useAuth()
+const { toast } = useToast()
 const isLoading = ref(false)
 const error = ref<string | null>(null)
 const calendlyStatus = ref<{ is_connected: boolean; needs_refresh?: boolean; message: string } | null>(null)
@@ -37,6 +43,8 @@ const copied = ref(false)
 const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
 const isLoadingApiKey = ref(true)
+const isLoadingSubscription = ref(true)
+const hasSubscription = ref(false)
 
 const calendlyAuthUrl = computed(() => {
   const clientId = import.meta.env.VITE_CALENDLY_CLIENT_ID
@@ -59,7 +67,7 @@ const widgetCode = computed(() => `<!-- Add Chat Widget CSS -->
   window.addEventListener('load', function() {
     if (window.ChatWidget && typeof window.ChatWidget.initChatWidget === 'function') {
       window.ChatWidget.initChatWidget({
-        apiKey: "your-api-key-here",
+        apiKey: "${apiKey.value}",
         apiUrl: "${baseUrl}"
       });
     } else {
@@ -141,6 +149,34 @@ const loadApiKey = async () => {
   }
 }
 
+const checkSubscriptionStatus = async () => {
+  try {
+    isLoadingSubscription.value = true
+    const response = await subscriptionApi.getSubscriptionStatus()
+    hasSubscription.value = response.has_subscription
+  } catch (error) {
+    console.error('Failed to fetch subscription status:', error)
+    hasSubscription.value = false 
+  } finally {
+    isLoadingSubscription.value = false
+  }
+}
+
+const handleSignUp = async () => {
+  try {
+    isLoadingSubscription.value = true
+    const response = await subscriptionApi.createSubscription()
+    window.location.href = response.payment_link
+  } catch (error) {
+    console.error('Failed to initiate subscription:', error)
+    toast({
+      title: 'Error',
+      description: 'Failed to start the sign-up process. Please try again.',
+      variant: 'destructive'
+    })
+  }
+}
+
 const copyWidgetCode = async () => {
   const code = `<!-- Add Chat Widget CSS -->
 <link rel="stylesheet" href="https://unpkg.com/@justbookme.ai/chat-widget/dist/chat-widget.css">
@@ -175,6 +211,7 @@ onMounted(() => {
   checkCalendlyStatus()
   loadSources()
   loadApiKey()
+  checkSubscriptionStatus()
 })
 </script>
 
@@ -193,44 +230,53 @@ onMounted(() => {
                 <h3 class="font-medium text-sm md:text-base">Calendly Connection</h3>
               </div>
               
-              <div v-if="isLoading">
-                <Loader2 class="h-4 w-4 text-primary animate-spin" />
+              <div v-if="isLoading" class="px-3 py-1.5">
+                <Loader2 class="h-4 w-4 text-muted-foreground animate-spin" />
               </div>
               
+              <!-- Not Connected State -->
               <button
-                v-else-if="!calendlyStatus?.is_connected || calendlyStatus?.needs_refresh"
+                v-else-if="!calendlyStatus?.is_connected"
                 @click="connectCalendly"
-                class="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md bg-primary text-white hover:bg-primary/90 transition-colors"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors"
               >
-                {{ calendlyStatus?.is_connected ? 'Reconnect' : 'Connect' }}
+                <XCircle class="h-4 w-4" />
+                Connect
+              </button>
+
+              <!-- Needs Refresh State -->
+              <button
+                v-else-if="calendlyStatus?.needs_refresh"
+                @click="connectCalendly"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md bg-orange-500 text-white hover:bg-orange-600 transition-colors"
+              >
+                <AlertTriangle class="h-4 w-4" />
+                Reconnect
               </button>
               
-              <div v-else class="flex items-center gap-2 px-3 py-1.5 bg-success/10 text-success rounded-md">
+              <!-- Connected State -->
+              <div v-else class="flex items-center gap-1.5 px-3 py-1.5 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 rounded-md">
                 <CheckCircle2 class="h-4 w-4" />
                 <span class="text-sm font-medium">Connected</span>
               </div>
             </div>
             
-            <p v-if="error" class="mt-2 text-sm text-destructive flex items-center gap-2">
+            <p v-if="error && !isLoading" class="mt-2 text-sm text-destructive flex items-center gap-1.5">
               <XCircle class="h-4 w-4" />
               {{ error }}
-            </p>
-            <p v-else-if="calendlyStatus?.needs_refresh" class="mt-2 text-sm text-warning flex items-center gap-2">
-              <XCircle class="h-4 w-4" />
-              Connection needs refresh
             </p>
           </div>
 
           <!-- Knowledge Sources Card -->
           <div class="rounded-lg bg-card p-3 md:p-4 shadow-sm border border-border/50" data-tutorial="knowledge-sources">
             <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 flex-grow">
                 <BookOpen class="h-5 w-5 text-primary" />
                 <h3 class="font-medium text-sm md:text-base">Website URL/Business Notes</h3>
               </div>
               <button
                 @click="showAddSourceDialog = true"
-                class="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md bg-primary text-white hover:bg-primary/90 transition-colors"
+                class="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md bg-primary text-white hover:bg-primary/90 transition-colors flex-shrink-0"
               >
                 <PlusIcon class="h-4 w-4 mr-1" />
                 Add Source
@@ -336,6 +382,31 @@ onMounted(() => {
                     <li>Paste it before the closing <code class="text-xs bg-muted-foreground/20 px-1 rounded">&lt;/body&gt;</code> tag in your HTML</li>
                     <li>The chat widget will appear automatically on your website</li>
                   </ol>
+                </div>
+
+                <!-- Subscription Warning -->
+                <Alert 
+                  v-if="!isLoadingSubscription && !hasSubscription"
+                  variant="warning"
+                  class="mt-4 border-orange-400 bg-orange-50 dark:bg-orange-950 dark:border-orange-600"
+                >
+                  <AlertTriangle class="h-5 w-5 text-orange-500 dark:text-orange-400" />
+                  <AlertTitle class="text-orange-700 dark:text-orange-300">Subscription Required for Scheduling</AlertTitle>
+                  <AlertDescription class="text-orange-600 dark:text-orange-400">
+                    The AI scheduling features will not function without an active subscription.
+                    <Button 
+                      variant="link"
+                      class="p-0 h-auto font-semibold text-orange-700 dark:text-orange-300 hover:underline ml-1"
+                      @click="handleSignUp"
+                      :disabled="isLoadingSubscription"
+                    >
+                      Sign up now for a free 14-day trial (cancel anytime)
+                    </Button>
+                  </AlertDescription>
+                </Alert>
+                <div v-if="isLoadingSubscription" class="mt-4 flex items-center justify-center text-muted-foreground text-sm">
+                  <Loader2 class="h-4 w-4 animate-spin mr-2" />
+                  Checking subscription status...
                 </div>
               </div>
             </div>

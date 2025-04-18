@@ -1,7 +1,13 @@
 import axios from 'axios'
 import { useAuth } from '@/composables/useAuth'
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+// Get the base URL from environment variables
+let baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+
+// Force HTTPS for production servers
+if (baseURL.includes('server.justbookme.ai') && baseURL.startsWith('http:')) {
+  baseURL = baseURL.replace('http:', 'https:')
+}
 
 const apiClient = axios.create({
   baseURL,

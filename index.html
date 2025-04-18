@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" href="/favicon.ico?v=20240517" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=20240517">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=20240517">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=20240517">
+    <link rel="manifest" href="/site.webmanifest?v=20240517">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="JustBookMe - Streamlining appointments and customer engagement through intelligent automation." />
     <meta name="keywords" content="appointment scheduling, booking system, calendar management, customer engagement, AI booking assistant" />
@@ -17,14 +17,14 @@
     <meta property="og:url" content="https://www.justbookme.ai/" />
     <meta property="og:title" content="JustBookMe - Intelligent Appointment Scheduling" />
     <meta property="og:description" content="Streamlining appointments and customer engagement through intelligent automation." />
-    <meta property="og:image" content="https://www.justbookme.ai/calendar-sync.png" />
+    <meta property="og:image" content="https://www.justbookme.ai/calendar-sync.png?v=20240517" />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://www.justbookme.ai/" />
     <meta property="twitter:title" content="JustBookMe - Intelligent Appointment Scheduling" />
     <meta property="twitter:description" content="Streamlining appointments and customer engagement through intelligent automation." />
-    <meta property="twitter:image" content="https://www.justbookme.ai/calendar-sync.png" />
+    <meta property="twitter:image" content="https://www.justbookme.ai/calendar-sync.png?v=20240517" />
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,24 +32,25 @@
     <title>JustBookMe - Intelligent Appointment Scheduling</title>
     
     <!-- Add Chat Widget CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/@justbookme.ai/chat-widget/dist/chat-widget.css">
+    <link rel="stylesheet" href="https://unpkg.com/@justbookme.ai/chat-widget/dist/chat-widget.css?v=20240517">
   </head>
   <body>
     <div id="app"></div>
     <div id="chat-widget"></div>
     
     <!-- Load Vue first -->
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script type="module" src="/src/main.ts"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js?v=20240517"></script>
+    <script type="module" src="/src/main.ts?v=20240517"></script>
     
     <!-- Add Chat Widget Script -->
-    <script src="https://unpkg.com/@justbookme.ai/chat-widget/dist/chat-widget.umd.js"></script>
+    <script src="https://unpkg.com/@justbookme.ai/chat-widget/dist/chat-widget.umd.js?v=20240517"></script>
     <script>
       window.addEventListener('load', function() {
         if (window.ChatWidget && typeof window.ChatWidget.initChatWidget === 'function') {
           window.ChatWidget.initChatWidget({
             apiKey: "n_F_bl-GUh6jsDdlUILn_P5jUA6RLYMg-mWfy8lsXTo",
-            apiUrl: "https://server.justbookme.ai"
+            apiUrl: "https://server.justbookme.ai",
+            version: "20240517"
           });
         } else {
           console.error('Chat widget failed to load properly');
