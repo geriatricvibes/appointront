@@ -385,25 +385,23 @@ onMounted(() => {
                 </div>
 
                 <!-- Subscription Warning -->
-                <Alert 
+                <div 
                   v-if="!isLoadingSubscription && !hasSubscription"
-                  variant="warning"
-                  class="mt-4 border-orange-400 bg-orange-50 dark:bg-orange-950 dark:border-orange-600"
+                  class="mt-4 flex items-center p-3 border border-border rounded-md bg-background"
                 >
-                  <AlertTriangle class="h-5 w-5 text-orange-500 dark:text-orange-400" />
-                  <AlertTitle class="text-orange-700 dark:text-orange-300">Subscription Required for Scheduling</AlertTitle>
-                  <AlertDescription class="text-orange-600 dark:text-orange-400">
-                    The AI scheduling features will not function without an active subscription.
-                    <Button 
-                      variant="link"
-                      class="p-0 h-auto font-semibold text-orange-700 dark:text-orange-300 hover:underline ml-1"
-                      @click="handleSignUp"
-                      :disabled="isLoadingSubscription"
-                    >
-                      Sign up now for a free 14-day trial (cancel anytime)
-                    </Button>
-                  </AlertDescription>
-                </Alert>
+                  <div class="flex-1 flex items-center gap-2 text-sm">
+                    <AlertTriangle class="h-4 w-4 text-muted-foreground" />
+                    <span>Scheduling requires a subscription.</span>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    variant="default"
+                    @click="handleSignUp"
+                    :disabled="isLoadingSubscription"
+                  >
+                    Start 14-day free trial
+                  </Button>
+                </div>
                 <div v-if="isLoadingSubscription" class="mt-4 flex items-center justify-center text-muted-foreground text-sm">
                   <Loader2 class="h-4 w-4 animate-spin mr-2" />
                   Checking subscription status...
